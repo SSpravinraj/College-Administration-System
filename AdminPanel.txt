@@ -1,0 +1,118 @@
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+
+public class AdminPanel implements ActionListener {
+	AdminPanel()
+	{
+		JFrame f1=new JFrame("Admin Panel");
+		f1.getContentPane().setBackground(Color.white);
+		
+		JLabel image;
+		//hello=new JLabel("Hey!! Admin!!");
+		//hello.setBounds(30, 30, 200, 30);
+		//hello.setFont(new Font("sansserif",Font.BOLD,24));
+		Image icon = Toolkit.getDefaultToolkit().getImage("C:/Users/User/Desktop/Pro Images/icon.png");    
+		f1.setIconImage(icon); 
+                image=new JLabel(new ImageIcon("C:/Users/User/Desktop/admin.jpg"));
+		
+		image.setBounds(150, 50 , 1000, 550);
+		JButton AddTeach,AddStudent,nonteaching,Librarystaff,security,Drivers,Hostelwardens,Hostelstudents,dayscholars,workers,Logout;
+		AddTeach=new JButton("Teacher Info");
+		AddTeach.setBounds(500, 200, 150, 30);
+		AddStudent=new JButton("Student Info");
+		AddStudent.setBounds(500, 245, 150, 30);
+		Librarystaff=new JButton("Library staff");
+		Librarystaff.setBounds(500,290,150,30);
+		nonteaching=new JButton("Non-Teaching staff");
+		nonteaching.setBounds(500, 335, 150, 30);
+		security=new JButton("Security Info");
+		security.setBounds(500,380,150,30);
+		Drivers=new JButton("Drivers Info");
+		Drivers.setBounds(660,200,150,30);
+		Hostelwardens=new JButton("Wardens Info");
+		Hostelwardens.setBounds(660, 245, 150, 30);
+		Hostelstudents=new JButton("HostelStudents info");
+		Hostelstudents.setBounds(660 , 380, 150, 30);
+		dayscholars=new JButton("Dayscholars Info");
+		dayscholars.setBounds(660,290,150,30);
+		workers=new JButton("Workers Info");
+		workers.setBounds(660, 335, 150, 30);
+		Logout=new JButton("Exit");
+		
+		Logout.setBounds(900, 100, 100, 30);
+		f1.add(AddTeach);f1.add(AddStudent);f1.add(Librarystaff);
+		f1.add(nonteaching);f1.add(Logout);//f1.add(hello);
+		f1.add(workers);f1.add(dayscholars);f1.add(Hostelstudents);
+		f1.add(Hostelwardens);f1.add(Drivers);f1.add(security);
+		f1.add(image);
+		
+		f1.setSize(1280,720);
+		
+		AddTeach.addActionListener(this);
+		AddStudent.addActionListener(this);
+		nonteaching.addActionListener(this);
+		security.addActionListener(this);
+		Librarystaff.addActionListener(this);
+                dayscholars.addActionListener(this);
+                Hostelstudents.addActionListener(this);
+                Hostelwardens.addActionListener(this);
+                Drivers.addActionListener(this);
+		f1.setLayout(null);
+		f1.setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		new AdminPanel();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getActionCommand().equals("Teacher Info"))
+		{
+			new AddTeacher();
+		}
+		if(e.getActionCommand().equals("Student Info"))
+		{
+			new AddStudent();
+		}
+		
+		if(e.getActionCommand().equals("Security Info"))
+		{
+			new AddSecurity();
+		}
+		if(e.getActionCommand().equals("Wardens Info"))
+		{
+			new Addwarden();
+		}
+		if(e.getActionCommand().equals("HostelStudents info"))
+		{
+			new  HostelStudent();
+		}
+		if(e.getActionCommand().equals("Dayscholars Info"))
+		{
+			new DaySchollar();
+		}
+		if(e.getActionCommand().equals("Library staff"))
+		{
+			new Libraryinfo();
+		}
+	}
+	
+	
+}
+

@@ -1,0 +1,433 @@
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+import javax.swing.*;
+
+public class Adddriver extends JFrame implements ActionListener,ItemListener
+{
+    JFrame add_driver;
+    JLabel name,age,dob,address,experience,license,blood_group,bus_no,unique_id,gender,mobile;
+    JTextField text_name,text_age,text_dob,text_address,text_experience,text_license,text_mobile,text_unique_id;
+    JButton generate,add,update,delete,clear,ok;
+    JRadioButton male,female;
+    ButtonGroup radio_gender;
+    JComboBox combo_bg;
+    String str_drivergender,str_updid;
+    Adddriver()
+    {
+        
+      add_driver= new JFrame("Driver Info");
+      add_driver.setLayout(null);
+        Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Driver Info");
+        lbl_heading.setBounds(200,50,200,40);
+        add_driver.add(lbl_heading);
+        lbl_heading.setFont(f);
+     
+           
+      //Name Creation
+      name=new JLabel("Name : ");
+      name.setBounds(50,100,50,30);
+       
+      text_name=new JTextField();
+      text_name.setBounds(200,100,150,30);
+       
+      //Age Creation
+      age=new JLabel("Age : ");
+      age.setBounds(50,150,50,30);
+      
+      text_age=new JTextField();
+      text_age.setBounds(200,150,150,30);
+      
+   
+      // Gender Creation
+      
+      gender=new JLabel("Gender : ");
+      gender.setBounds(50,200,80,30);
+      
+      male=new JRadioButton("Male");
+      male.setBounds(200,200,80,30);
+     
+      female=new JRadioButton("Female");
+      female.setBounds(280,200,100,30);
+     
+      radio_gender=new ButtonGroup();
+      radio_gender.add(male);
+      radio_gender.add(female);
+    
+      
+     //DOB Creation
+      dob=new JLabel("DOB : ");
+      dob.setBounds(50, 250, 50, 30);
+      
+      text_dob=new JTextField();
+      text_dob.setBounds(200,250,150,30);
+        
+        
+    //Phone Number Creation
+      mobile=new JLabel("Phone Number : ");
+      mobile.setBounds(50,300,100,30);
+        
+      text_mobile=new JTextField();
+      text_mobile.setBounds(200,300,150,30);
+        
+    //Expreience Creation
+      experience=new JLabel("Experience : ");
+      experience.setBounds(50,350,90,30);
+        
+      text_experience=new JTextField();
+      text_experience.setBounds(200,350,150,30);
+        
+        
+    //Address Creation
+      address=new JLabel("Address : ");
+      address.setBounds(50,400,100,30);
+        
+      text_address=new JTextField();
+      text_address.setBounds(200,400,150,30);
+        
+    //Blood Group Creation
+      blood_group=new JLabel("Blood Group : ");
+      blood_group.setBounds(50,450,120,30);
+        
+      String bg_arr[]={"O +ve","O -ve","A +ve","A -ve","B +ve","B -ve","AB +ve","AB -ve"};
+      combo_bg = new JComboBox(bg_arr);
+      combo_bg.setBounds(200,450,60,30);
+        
+    //License ID Creation
+      license=new JLabel ("License ID ");
+      license.setBounds(50,500,120,30);
+
+      text_license=new JTextField ();
+      text_license.setBounds(200,500,150,30);
+        
+    //Unique ID Creation
+      unique_id=new JLabel("Unique ID :");
+      unique_id.setBounds(50,550,150,30);
+        
+      text_unique_id=new JTextField();
+      text_unique_id.setBounds(200,550,150,30);
+       
+      generate = new JButton("Generate");
+      generate.setBounds(380, 550, 100, 30);
+        
+         
+      add = new JButton("Add");
+      add.setBounds(75,600, 80, 30);
+        
+      update = new JButton("Update");
+      update.setBounds(225,600, 80, 30);
+      
+      ok= new JButton("OK");
+      ok.setBounds(376,600,80,30);
+        
+      delete = new JButton("Delete");
+      delete.setBounds(75, 650, 80, 30);
+        
+      clear = new JButton("Clear");
+      clear.setBounds(225, 650, 80, 30);
+        
+        
+      add_driver.add(name);
+      add_driver.add(text_name);
+    
+      add_driver.add(age);
+      add_driver.add(text_age);
+    
+      add_driver.add(dob);
+      add_driver.add(text_dob);
+    
+      add_driver.add(experience);
+      add_driver.add(text_experience);
+    
+      add_driver.add(license);
+      add_driver.add(text_license);
+    
+      add_driver.add(blood_group);
+      add_driver.add(combo_bg);
+    
+      add_driver.add(unique_id);
+      add_driver.add(text_unique_id);
+    
+      add_driver.add(mobile);
+      add_driver.add(text_mobile);
+    
+      add_driver.add(gender);
+      add_driver.add(male);
+      add_driver.add(female);
+    
+      add_driver.add(address);
+      add_driver.add(text_address);
+    
+      add_driver.add(add);
+      add_driver.add(update);
+      add_driver.add(unique_id);
+      add_driver.add(delete);
+      add_driver.add(update);
+      add_driver.add(clear);
+      add_driver.add(generate);
+      add_driver.add(ok);
+      
+      add.addActionListener(this);
+    generate.addActionListener(this);
+    update.addActionListener(this);
+    clear.addActionListener(this);
+    delete.addActionListener(this);
+    ok.addActionListener(this);
+    male.addItemListener(this);
+    female.addItemListener(this);
+    
+      text_unique_id.setEditable(false);
+       add_driver.setVisible(true);
+      add_driver.setSize(800,800);
+      //add_driver.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       
+      
+      
+      
+       
+    
+      }
+
+public static void main(String[] args)
+{
+new Adddriver();
+}
+public void itemStateChanged(ItemEvent ie){
+
+        ItemSelectable itemselected=ie.getItemSelectable();
+
+        if(itemselected==male){
+                str_drivergender="Male";
+        }
+        else if(itemselected==female){
+                str_drivergender="Female";
+        }
+    }
+int ui=1;
+String idd="";
+  public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        
+        if(ob==generate)
+		{
+			
+			try{
+				 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+				Statement st=con.createStatement();
+				String query="Select UniqueID from driver";
+				ResultSet rs=st.executeQuery(query);
+				while(rs.next())
+				{
+					idd=rs.getString("UniqueID");
+					ui=Integer.parseInt(idd);
+					if(idd==null)
+					{
+						ui=1;
+					}
+					else
+					{
+						ui=ui+1;
+					}
+				}
+				
+				con.close();
+			}
+			catch(Exception ec)
+			{
+				System.out.print(ec);
+			}
+			text_unique_id.setText(ui+"");
+		}
+         
+        if(ob==add)
+        {
+           try
+           {
+           String str_name,str_age,str_dob,str_mobile,str_experience,str_address,str_unique_id,str_blood_group,str_licence;
+           str_name=text_name.getText();
+           str_age=text_age.getText();
+           str_address=text_address.getText();
+           str_mobile=text_mobile.getText();
+           str_dob=text_dob.getText();
+           str_experience=text_experience.getText();
+           str_blood_group=combo_bg.getSelectedItem().toString();
+           str_unique_id=text_unique_id.getText();
+           str_licence=text_license.getText();
+           Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+           
+            
+            String query="insert into driver values('"+str_name+"','"+str_age+"','"+str_drivergender+"','"+str_dob+"','"+str_mobile+"','"+str_experience+"','"+str_address+"','"+str_blood_group+"','"+str_licence+"','"+str_unique_id+"')";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(combo_bg,"Added Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println(" "+ex);
+            }
+           
+           
+           
+           
+        }
+        if(ob==update)
+        {
+            str_updid=JOptionPane.showInputDialog("Enter Driver's Id");
+                
+        try{
+        	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+           Statement  st=con.createStatement();
+                  
+            String query="select * from driver where UniqueID='"+str_updid+"'";
+
+           ResultSet rs = st.executeQuery(query);
+           
+             while(rs.next())
+             {
+            	 
+            text_name.setText(rs.getString("Name"));
+            text_address.setText(rs.getString("Address"));
+                            
+            text_mobile.setText(rs.getString("Phonenumber"));
+            text_dob.setText(rs.getString("DOB"));
+            
+            text_age.setText(rs.getString("Age"));
+            text_unique_id.setText(rs.getString("UniqueID"));
+            text_experience.setText(rs.getString("Experience"));
+            text_license.setText(rs.getString("LicenceID"));
+            
+            
+            combo_bg.setSelectedItem(rs.getString("Bloodgroup"));
+            	 
+          
+             }
+           
+            con.close();
+            male.setEnabled(false);
+            female.setEnabled(false);
+            
+             text_age.setEditable(false);
+             text_dob.setEditable(false);
+             text_experience.setEditable(false);
+             text_license.setEditable(false);
+              combo_bg.setEnabled(false);
+             
+           
+            add.setEnabled(false);
+            generate.setEnabled(false);
+            delete.setEnabled(false);
+            update.setEnabled(false);
+              
+                        
+        }
+        catch(Exception exp){
+          if(exp instanceof SQLException)
+				{
+					JOptionPane.showMessageDialog(generate, "ID Doesn't Exist");;
+				}
+				
+        }
+        
+       
+        }
+        if(ob==ok)
+        {
+            try
+           {
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+                Statement  st = con.createStatement();
+           
+            
+                String query="update driver set Name='"+text_name.getText()+"',Address='"+address.getText()+"',Phonenumber='"+text_mobile.getText()+"',Bloodgroup='"+combo_bg.getSelectedItem().toString()+"' where UniqueID='"+str_updid+"'";
+                st.executeUpdate(query);
+                con.close();
+                JOptionPane.showMessageDialog(combo_bg,"Updated Successfully");
+                male.setEnabled(true);
+            female.setEnabled(true);
+            
+             text_age.setEditable(true);
+             text_dob.setEditable(true);
+             text_experience.setEditable(true);
+             text_license.setEditable(true);
+              combo_bg.setEnabled(true);
+              text_name.setText("");
+              text_address.setText("");
+              text_mobile.setText("");
+              text_dob.setText("");
+              
+              text_age.setText("");
+              text_unique_id.setText("");
+              text_experience.setText("");
+              text_license.setText("");
+              combo_bg.setSelectedItem(null);
+              radio_gender.clearSelection();
+             
+           
+            add.setEnabled(true);
+            generate.setEnabled(true);
+            delete.setEnabled(true);
+            update.setEnabled(true);
+              
+              
+                
+           }
+           catch(Exception ex)
+            {
+                       System.out.println("--->"+ex);
+            }
+        }
+        if(ob==delete)
+        {
+            String str_delete_id;
+            str_delete_id=JOptionPane.showInputDialog("enter the Delete ID");
+            try
+           {
+          
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+           
+            
+            String query="delete from driver where UniqueID='"+str_delete_id+"'";
+            st.executeUpdate(query);
+            JOptionPane.showMessageDialog(combo_bg,"Deleted Successfully");
+            con.close();
+           }
+            catch(Exception ex)
+            {
+                 if(ex instanceof SQLException)
+				{
+					JOptionPane.showMessageDialog(generate, "ID Doesn't Exist");;
+				}
+            }
+           
+            
+        }
+        if(ob==clear)
+        {
+            text_name.setText("");
+            text_address.setText("");
+            text_mobile.setText("");
+            text_dob.setText("");
+            
+            text_age.setText("");
+            text_unique_id.setText("");
+            text_experience.setText("");
+            text_license.setText("");
+            combo_bg.setSelectedItem(null);
+            radio_gender.clearSelection();
+        }
+    }
+
+}

@@ -1,0 +1,22 @@
+import com.email.durgesh.Email;
+public class SendMail {
+    public static void main(String args[])
+    {
+        String str="pravin";
+        try{
+            Email email=new Email("pravinleap2000@gmail.com","rajpravin2000");
+            email.setFrom("pravinleap2000@gmail.com","Tech");
+            email.setSubject("hlo");
+            email.setContent(str,"text/html");
+            //email.addRecipient("18euit110@skcet.ac.in");
+            email.send();
+            
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println("-->"+ex);
+        }
+    }
+    
+}

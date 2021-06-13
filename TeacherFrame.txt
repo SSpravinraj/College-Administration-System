@@ -1,0 +1,139 @@
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+public class TeacherFrame {
+    JFrame frame_TeacherFrame;
+    static JLabel lbl_name,lbl_department;
+    static JButton btn_showStudent,btn_addMarks;
+    String name,department;
+    
+    TeacherFrame(String ID){
+        //Creating Frame
+        frame_TeacherFrame = new JFrame("Teacher Login");        
+        
+        //Get Content Pane
+        Container c=frame_TeacherFrame.getContentPane();   
+        c.setLayout(null);
+        
+        Image icon = Toolkit.getDefaultToolkit().getImage("C:/Users/User/Desktop/stuico.jpg");    
+        frame_TeacherFrame.setIconImage(icon); 
+        
+        ImageIcon image1=new ImageIcon("D:/CAS/backo.jpg");
+        JLabel label1=new JLabel(image1);
+        
+        
+        label1.setBounds(150,0,379,379);
+        
+        
+        c.setBackground(Color.white);
+        
+        //Creating Font Style
+        Font f1 = new Font("Arial Bold", Font.BOLD, 16);
+        Font f=new Font("Arial Bold",Font.BOLD,16);
+        
+        //get Name and Designation from Teachers DB
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st=con.createStatement();
+
+            String query="SELECT Name,Department FROM Teachers WHERE UniqueID='"+ID+"' OR Name='"+ID+"'";
+
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+            name =rs.getString("Name");
+            department = rs.getString("Department");
+            }
+            con.close();
+        }
+        
+        catch(Exception e){
+            System.out.println("---------->  "+e);
+        }
+        
+        //Adding Name
+        lbl_name=new JLabel();
+        lbl_name.setText("Name : "+name);
+        lbl_name.setFont(f1);
+        lbl_name.setBounds(450, 0, 200, 50);
+        
+        //Adding Designation//
+        lbl_department = new JLabel();
+        lbl_department.setText("Department : "+department);
+        lbl_department.setFont(f1);
+        lbl_department.setBounds(450, 50,200,50);
+        
+        //Adding Buttons for Show Students
+        btn_showStudent = new JButton();
+        btn_showStudent.setText("Show Students");
+        btn_showStudent.setFont(f);
+        btn_showStudent.setBounds(100,400,200,50);
+        
+        //Adding Button for Add Marks
+        btn_addMarks = new JButton();
+        btn_addMarks.setText("Add Marks");
+        btn_addMarks.setFont(f);
+        btn_addMarks.setBounds(320,400,200,50);
+        
+        //Adding it Buttons and Labels in the Content Pane
+        c.add(lbl_name);
+        c.add(lbl_department);
+        c.add(btn_showStudent);
+        c.add(btn_addMarks);
+        
+        c.add(label1);
+        
+        //Giving ActionListener to Show Student Button
+        btn_showStudent.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                action_showStudent();
+            }
+        });
+        
+        //Giving ActionListener to Add Marks Button
+        btn_addMarks.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                action_addMarks();
+            }
+        });
+        
+        //Set Frame
+        frame_TeacherFrame.setLayout(null);
+        frame_TeacherFrame.setVisible(true);
+        frame_TeacherFrame.setBounds(200,200,660,600);
+        frame_TeacherFrame.setResizable(false);
+        //frame_TeacherFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+    }
+    
+    //ActionEvent for Show Student Button
+    public static void action_showStudent(){
+        System.out.println("Show STUDENT");
+        new ShowStudents();
+    }
+    
+    //ActionEvent for AddMarks Button
+    public static void action_addMarks(){
+    	String id = JOptionPane.showInputDialog("Enter the Student ID");
+        new AddMarks(id);
+    }
+  
+   
+}

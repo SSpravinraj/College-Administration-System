@@ -1,0 +1,566 @@
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
+public class AddStudent {
+    
+    static JFrame frame_AddStudent;
+    static JButton btn_UniqueIDGenerate, btn_PwdGenerate,btn_Add,btn_Update,btn_Delete,btn_Clear,btn_Ok;
+    static JLabel lbl_name,lbl_address,lbl_phone,lbl_gender,lbl_department,lbl_dob,lbl_residence,lbl_uniqueID,lbl_password,lbl_fees;
+    static JTextField txt_name,txt_address,txt_phone,txt_uniqueID,txt_password,txt_dob;
+    static JRadioButton radio_male,radio_female;
+    static JComboBox combo_department,combo_residence,combo_fees;
+    static ButtonGroup grp_gender;
+    
+    AddStudent(){
+        
+        /* Adding Frame */
+        frame_AddStudent = new JFrame("Add Students");
+        
+        frame_AddStudent.setLayout(null);
+        frame_AddStudent.setVisible(true);
+        frame_AddStudent.setBounds(200,100,800,700);
+       // frame_AddStudent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //Get Content Pane
+        Container c=frame_AddStudent.getContentPane();  
+        c.setBackground(Color.pink);
+        c.setLayout(null);
+        
+        //Adding Title
+        Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel();
+        lbl_heading.setBounds(250,5,200,40);
+        lbl_heading.setText("Student Details");
+        lbl_heading.setFont(f);
+        
+        //Creating Font Style
+        Font f1 = new Font("Arial", Font.PLAIN, 14);
+        
+        //Adding Labels and TextFields for Name
+        lbl_name = new JLabel("Name : ");
+        lbl_name.setFont(f1);
+        lbl_name.setBounds(50,80,100,30);
+        
+        txt_name = new JTextField();
+        txt_name.setBounds(180,80,180,30);
+        
+        //Adding Label and TextFields for Phone Number
+        lbl_phone = new JLabel("Phone Number : ");
+        lbl_phone.setFont(f1);
+        lbl_phone.setBounds(50,120,150,30);
+        
+        txt_phone = new JTextField();
+        txt_phone.setBounds(180,120,180,30);
+        
+        //Adding Label for Gender
+        lbl_gender = new JLabel("Gender : ");
+        lbl_gender.setBounds(50,160,150,30);
+        
+        //Creating new Cursor Type for Selecting Radio Buttons
+        Cursor cur=new Cursor(Cursor.HAND_CURSOR);
+        
+        //Adding Radio Buttons for Gender
+        radio_male = new JRadioButton("Male");
+        radio_male.setBounds(180,160,70,30);
+        radio_male.setBackground(Color.pink);
+        radio_male.setCursor(cur);
+        
+        radio_female = new JRadioButton("Female");
+        radio_female.setBounds(280,160,80,30);
+        radio_female.setBackground(Color.pink);
+        radio_female.setCursor(cur);
+        
+        //Creating a ButtonGroup for Gender
+        grp_gender=new ButtonGroup();
+        grp_gender.add(radio_male);
+        grp_gender.add(radio_female);
+        
+        //Label for DOB
+        lbl_dob = new JLabel("DOB : ");
+        lbl_dob.setBounds(50,200,100,30);
+        
+        //TextField for DOB
+        txt_dob = new JTextField();
+        txt_dob.setBounds(180,200,180,30);
+        
+        /*
+        //Creating JComboBox for Day
+        String day_arr[]=new String[31];
+        for(int i=1;i<=31;i++)
+        day_arr[i-1]=Integer.toString(i); 
+        combo_day = new JComboBox(day_arr);
+        combo_day.setBounds(180,200,40,30);
+        
+        //Creating JComboBox for Month
+        String month_arr[]={"Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec" }; 
+        combo_month=new JComboBox(month_arr);
+        combo_month.setBounds(230,200,60,30);
+        
+        //Creating JComboBox for Year
+        String year_arr[]=new String[70];
+        for(int i=1951;i<=2020;i++)
+        year_arr[i-1951]=Integer.toString(i);
+        combo_year = new JComboBox(year_arr);
+        combo_year.setBounds(300,200,60,30);
+        */
+        
+        //Creating Label and TextField for Address
+        lbl_address = new JLabel("Address : ");
+        lbl_address.setBounds(50,240,100,30);
+        
+        txt_address = new JTextField();
+        txt_address.setBounds(180,240,180,100);
+        
+        //Label and TextField for Department
+        lbl_department = new JLabel("Department : ");
+        lbl_department.setBounds(50,350,100,30);
+        
+        String department_arr[] = {"CSE","IT","ECE","EEE","MECH","MCT"};
+        combo_department = new JComboBox(department_arr);
+        combo_department.setBounds(180,350,180,30);
+        
+        //Label and TextField for Residence
+        lbl_residence = new JLabel("Residence : ");
+        lbl_residence.setBounds(50,390,100,30);
+        
+        String residence_arr[] = {"Day Scholar","Hosteller"};
+        combo_residence = new JComboBox(residence_arr);
+        combo_residence.setBounds(180,390,180,30);
+        
+        //Label and Combo for Payment
+        lbl_fees =  new JLabel("Fee Payment Status: ");
+        lbl_fees.setBounds(50,430,100,30);
+        
+        String payment_arr[] = {"Paid","Pending"};
+        combo_fees = new JComboBox(payment_arr);
+        combo_fees.setBounds(180, 430, 180, 30);
+        
+        //Label, TextField, Button for Unique ID
+        lbl_uniqueID = new JLabel("Unique ID : ");
+        lbl_uniqueID.setBounds(50, 470, 100, 30);
+        
+        txt_uniqueID = new JTextField();
+        txt_uniqueID.setBounds(180, 470, 180, 30);
+        
+        btn_UniqueIDGenerate = new JButton("Generate");
+        btn_UniqueIDGenerate.setBounds(380,470,100,30);
+        
+        //Label, TextField, Button for Password
+        lbl_password = new JLabel("Password");
+        lbl_password.setBounds(50,510,100,30);
+        
+        txt_password = new JTextField();
+        txt_password.setBounds(180, 510, 180, 30);
+        
+        btn_PwdGenerate = new JButton("Generate");
+        btn_PwdGenerate.setBounds(380, 510, 100, 30);
+        
+        //Button for ADD
+        btn_Add = new JButton("Add");
+        btn_Add.setBounds(150,570, 80, 30);
+        
+        //Button for Update
+        btn_Update = new JButton("Update");
+        btn_Update.setBounds(250, 570, 80, 30);
+        
+        //Button for Delete
+        btn_Delete = new JButton("Delete");
+        btn_Delete.setBounds(150, 620, 80, 30);
+        
+        //Button for Clear
+        btn_Clear = new JButton("Clear");
+        btn_Clear.setBounds(250, 620, 80, 30);
+        
+        //Button for OK
+        btn_Ok = new JButton("OK");
+        btn_Ok.setBounds(350,570,80,30);
+        
+        //--------------------------------------------------------------------//
+        
+        //Applying Fonts for All the Labels, TextFields, RadioButtons, ComboBox
+        lbl_name.setFont(f1);
+        lbl_address.setFont(f1);
+        lbl_phone.setFont(f1);
+        lbl_gender.setFont(f1);
+        lbl_department.setFont(f1);
+        lbl_dob.setFont(f1);
+        lbl_fees.setFont(f1);
+        lbl_residence.setFont(f1);
+        lbl_uniqueID.setFont(f1);
+        lbl_password.setFont(f1);
+        
+        txt_name.setFont(f1);
+        txt_address.setFont(f1);
+        txt_phone.setFont(f1);                
+        txt_uniqueID.setFont(f1);
+        txt_password.setFont(f1);
+        txt_dob.setFont(f1);
+        
+        btn_UniqueIDGenerate.setFont(f1);
+        btn_PwdGenerate.setFont(f1);
+        btn_Add.setFont(f1);
+        btn_Update.setFont(f1);
+        btn_Delete.setFont(f1);
+        btn_Clear.setFont(f1);
+        btn_Ok.setFont(f1);
+        
+        radio_male.setFont(f1);
+        radio_female.setFont(f1);
+        
+        //combo_day.setFont(f1);
+        //combo_month.setFont(f1);
+        //combo_year.setFont(f1);
+        combo_department.setFont(f1);
+        combo_residence.setFont(f1);
+        combo_fees.setFont(f1);
+        
+        //--------------------------------------------------------------------//
+        
+        //Adding all Components to the ContentPane
+        c.add(lbl_heading);
+        
+        c.add(lbl_name);
+        c.add(txt_name);
+        
+        c.add(lbl_phone);
+        c.add(txt_phone);
+        
+        c.add(lbl_gender);
+        c.add(radio_male);
+        c.add(radio_female);
+        
+        c.add(lbl_dob);
+        c.add(txt_dob);
+        //c.add(combo_day);
+        //c.add(combo_month);
+        //c.add(combo_year);
+        
+        c.add(lbl_address);
+        c.add(txt_address);
+        
+        c.add(lbl_department);
+        c.add(combo_department);
+        
+        c.add(lbl_residence);
+        c.add(combo_residence);
+        
+        c.add(lbl_fees);
+        c.add(combo_fees);
+        
+        c.add(lbl_uniqueID);
+        c.add(txt_uniqueID);
+        c.add(btn_UniqueIDGenerate);
+        
+        c.add(lbl_password);
+        c.add(txt_password);
+        c.add(btn_PwdGenerate);
+        
+        c.add(btn_Add);
+        c.add(btn_Update);
+        c.add(btn_Delete);
+        c.add(btn_Clear);
+        c.add(btn_Ok);
+        
+        /*--------------------------------------------------------------------------*/
+        
+        //Making Password Field and UniqueID Field NonEditable
+        txt_uniqueID.setEditable(false);
+        txt_password.setEditable(false);
+        
+        //Making Ok set Disabled by Default
+        btn_Ok.setEnabled(false);
+        
+        /*---------------------------------------------------------------------------*/
+        
+        //Adding ActionListener for Add
+        btn_Add.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                action_add(e);
+            }
+        });
+        
+        //Adding ActionListener for Generate UniqueID
+        btn_UniqueIDGenerate.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_generateID(e);
+            }
+        });
+        
+        //Adding ActionListener for Generate Password
+        btn_PwdGenerate.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_generatePWD(e);
+            }
+        });
+        
+        //Adding ActionListener for Clear All
+        btn_Clear.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_clear(e);
+            }
+        });
+        
+        //Adding ActionListener for Delete
+        btn_Delete.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_delete(e);
+            }
+        });
+        
+        //Adding ActionListener for Update
+        btn_Update.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_update(e);
+            }
+        });
+        
+        //Adding ActionListener for OK
+        btn_Ok.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                action_ok(e);
+            }
+        });
+    }
+    
+    //ActionEvent for Generating UniqueID
+    public static void action_generateID(ActionEvent event){
+        int ui = 1;
+        String idd = "";
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement st=con.createStatement();
+            String query = "SELECT UniqueID FROM students ORDER BY UniqueID DESC LIMIT 1";
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+            idd = rs.getString("UniqueID");
+            ui = Integer.parseInt(idd) + 1;
+            }
+            con.close();
+            
+        }
+        catch(Exception ae){
+            System.out.println(ae);
+        }
+        txt_uniqueID.setText(ui + "");
+    }
+    
+    //ActionEvent for Generating Password
+    public static void action_generatePWD(ActionEvent event){
+        String name = txt_name.getText();
+        String id = txt_uniqueID.getText();
+        String password = name+"_"+id+"@skcet";
+        txt_password.setText(password + "");
+    }
+    
+    //ActionEvent for Adding 
+    public static void action_add(ActionEvent event){
+        String name = txt_name.getText();
+        String phone = txt_phone.getText();
+        String gender = "";
+        if(radio_male.isSelected()==true){
+            gender = "Male";
+        }
+        else{
+            gender = "Female";
+        }
+        
+        /*
+        String day = combo_day.getSelectedItem().toString();
+        String month = combo_month.getSelectedItem().toString();
+        String year = combo_year.getSelectedItem().toString();
+        String dob = day+":"+month+":"+year;
+        */
+        String dob = txt_dob.getText();
+        //String DOB = combo_day.getSelectedItem().toString()+":"+combo_month.getSelectedItem().toString()+":"+combo_year.getSelectedItem().toString();
+        String address = txt_address.getText();
+        String department = combo_department.getSelectedItem().toString();
+        String residence = combo_residence.getSelectedItem().toString();
+        String fees = combo_fees.getSelectedItem().toString();
+        String uniqueID = txt_uniqueID.getText();
+        String password = txt_password.getText();
+        
+        //Establishing Connection
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+            String query = "insert into Students(Name,Phone,Gender,DOB,Address,Department,Residence,Fees,UniqueID,Password) values('"+name+"','"+phone+"','"+gender+"','"+dob+"','"+address+"','"+department+"','"+residence+"','"+fees+"','"+uniqueID+"','"+password+"')";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(btn_Add,"Added Successfully");
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
+                
+    }
+    
+    //ActionEvent for Clear
+    public static void action_clear(ActionEvent event){
+        txt_name.setText("");
+        txt_phone.setText("");
+        txt_dob.setText("");
+        txt_address.setText("");
+        combo_department.setSelectedIndex(0);
+        combo_residence.setSelectedIndex(0);
+        combo_fees.setSelectedIndex(0);
+        txt_uniqueID.setText("");
+        txt_password.setText("");
+        grp_gender.clearSelection();
+    }
+    
+    //ActionEvent for Delete
+    public static void action_delete(ActionEvent event){
+        String deleteID;
+        deleteID = JOptionPane.showInputDialog("enter the Delete ID");
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+            String query = "delete from students where UniqueID='"+deleteID+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(btn_Delete,"Deleted Successfully");
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
+    
+    //ActionEvent for Update
+    public static void action_update(ActionEvent event){
+        String id = JOptionPane.showInputDialog("Enter the Unique Id");
+        try{
+            //Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+            Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+            String query="select * from students where UniqueID='"+id+"'";
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+            
+            //Insert the Fetched Data into TextFields
+            txt_name.setText(rs.getString("Name"));
+            txt_phone.setText(rs.getString("Phone"));
+            txt_address.setText(rs.getString("Address"));
+            combo_fees.setSelectedItem(rs.getString("Fees"));
+            combo_residence.setSelectedItem(rs.getString("Residence"));
+            combo_department.setSelectedItem(rs.getString("Department"));
+            txt_dob.setText(rs.getString("DOB"));
+            String Gender = rs.getString("Gender");
+            if(Gender == "Male"){
+                radio_male.setSelected(true);
+            }
+            else{
+                radio_female.setSelected(false);
+            }
+            String dob = rs.getString("DOB");
+            //String date = dob.charAt(0)+dob.charAt(1);
+            
+            txt_uniqueID.setText(rs.getString("UniqueID"));
+            txt_password.setText(rs.getString("Password"));
+            }
+            //Disabling non-Editable Fields
+            txt_name.setEditable(false);
+            txt_uniqueID.setEditable(false);
+            txt_password.setEditable(false);
+            radio_male.setEnabled(false);
+            radio_female.setEnabled(false);
+            txt_dob.setEnabled(false);
+            
+            //Enable OK Button and Disable ADD,UPDATE,DELETE Buttons
+            btn_Add.setEnabled(false);
+            btn_Delete.setEnabled(false);
+            btn_Update.setEnabled(false);
+        
+            btn_Ok.setEnabled(true);
+            
+            //Disable Generate ID, Password Buttons
+            btn_UniqueIDGenerate.setEnabled(false);
+            btn_PwdGenerate.setEnabled(false);
+            
+            //Close Connection
+            con.close();
+            
+        }
+        catch(Exception ex){
+            if(ex instanceof SQLException){
+                JOptionPane.showMessageDialog(btn_Update, "ID Doesn't Exist");
+            }
+            System.out.println(""+ex);
+        }
+                
+    }
+    
+    public static void action_ok(ActionEvent event){
+        String id = txt_uniqueID.getText();
+        String phone = txt_phone.getText();
+        String address = txt_address.getText();
+        String department = combo_department.getSelectedItem().toString();
+        String residence = combo_residence.getSelectedItem().toString();
+        String fees = combo_fees.getSelectedItem().toString();
+        
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+            String query="UPDATE Students SET Phone='"+phone+"',Address='"+address+"',Department='"+department+"',Residence='"+residence+"',Fees='"+fees+"' WHERE UniqueID='"+id+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(btn_Ok,"Updated Successfully");
+            
+            //Enable the Previously Editable Fields
+            txt_name.setEditable(true);
+            txt_uniqueID.setEditable(false);
+            txt_password.setEditable(false);
+            radio_male.setEnabled(true);
+            radio_female.setEnabled(true);
+            txt_dob.setEnabled(true);
+            
+            //Enable Generate ID, Password Buttons
+            btn_UniqueIDGenerate.setEnabled(true);
+            btn_PwdGenerate.setEnabled(true);
+            
+            //Disable Ok, Enable ADD,DELETE,UPDATE Buttons
+            btn_Add.setEnabled(true);
+            btn_Delete.setEnabled(true);
+            btn_Update.setEnabled(true);
+            
+            btn_Ok.setEnabled(false);
+            
+        }
+        catch(Exception ex){
+            System.out.println(""+ex);
+        }
+    }
+    public static void main(String[] args)
+    {
+    	new AddStudent();
+    }
+}
+

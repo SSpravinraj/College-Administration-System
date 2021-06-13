@@ -1,0 +1,186 @@
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+
+public class Login implements ActionListener {
+	
+	JFrame f;
+	JTextField t1,t2;
+	JComboBox b1;
+	JButton Login;
+	
+	
+	Login()
+	{
+		JFrame f=new JFrame("Login Info");
+		f.getContentPane().setBackground(Color.white);
+		f.pack();
+		JLabel User,pass,Type,Title,image,logo,base;
+		JButton Login,signup;
+		Image icon = Toolkit.getDefaultToolkit().getImage("D:/CAS/admin.jpg");    
+		f.setIconImage(icon);    
+		//Title=new JLabel("COLLEGE ADMINISTRATION SYSTEM");
+		//Title.setBounds(30,10,370,60);
+		//Title.setFont(new Font("sansserif",Font.BOLD,20));
+		//Title.setOpaque(true);
+		//Title.setBackground(Color.MAGENTA);
+		image=new JLabel(new ImageIcon("D:/CAS/admin1.jpg"));
+		
+		image.setBounds(575, 190 , 250, 250);
+		base=new JLabel(new ImageIcon("D:/CAS/capture.png"));
+		base.setBounds(200, 600, 1300,120);
+		logo=new JLabel(new ImageIcon("D:/CAS/logo.png"));
+		logo.setBounds(470, 100, 500, 60);
+		User=new JLabel("USERNAME OR ID");
+		User.setBounds(600,200,200,30);
+		t1=new JTextField("");
+		t1.setBounds(600,230,200,30);
+		pass=new JLabel("PASSWORD");
+		pass.setBounds(600,260,200,30);
+		t2=new JTextField("");
+		t2.setBounds(600,290,200,30);
+		String s1[]={"Administrator","Student","Teacher"};
+		Type=new JLabel("User Type");
+		Type.setBounds(600,320,200,30);
+		b1=new JComboBox(s1);
+		b1.setBounds(600, 350, 200, 30);
+		Login = new JButton("LOGIN");
+		Login.setBounds(600,400,100,30);
+		signup = new JButton("CANCEL");
+		signup.setBounds(720,400,100,30);
+		f.add(t1);f.add(t2);f.add(Login);f.add(signup);f.add(pass);f.add(b1);
+		f.add(Type);//f.add(Title);
+		f.add(logo);
+		f.add(User);
+		f.setSize(1920,1100);
+		f.add(image);
+		f.add(base);
+		f.setLayout(null);
+		f.setVisible(true);
+		Login.addActionListener(this);
+		signup.addActionListener(this);
+	}
+
+	public static void main(String[] args) {
+		
+		new Login();
+
+	}
+public void actionPerformed(ActionEvent e) {
+		
+		if(e.getActionCommand().equals("LOGIN"))
+		{
+			if(t1.getText().isEmpty()|| t2.getText().isEmpty())
+			{
+				JOptionPane.showMessageDialog(f, "USER NAME And Password SHOULD NOT BE EMPTY");
+			}
+		 if(b1.getSelectedItem().equals("Administrator"))
+			{
+				try
+				{
+					//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                                        Class.forName("com.mysql.jdbc.Driver");
+			                 Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+					Statement st=con.createStatement();
+					String query="SELECT admin,password from admin ";
+					ResultSet rs=st.executeQuery(query);
+					while(rs.next())
+					{
+						if(t1.getText().equals(rs.getString("admin")) && t2.getText().equals(rs.getString("password")))
+						{
+							JOptionPane.showMessageDialog(f, "Login as Admin");
+							new AdminPanel();
+							break;
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(f,"Error Occurs");
+							break;
+						}
+					}
+					con.close();
+				}catch(Exception ec)
+				{
+					System.out.print(ec);
+				}
+				
+			}
+		 else if(b1.getSelectedItem().equals("Teacher"))
+		 {
+			 try
+				{
+					//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                                    Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+					Statement st=con.createStatement();
+					String query="SELECT UniqueID,Password from Teachers ;";
+					ResultSet rs=st.executeQuery(query);
+					while(rs.next())
+					{
+						if(t1.getText().equals(rs.getString("UniqueID")) && t2.getText().equals(rs.getString("Password")))
+						{
+							JOptionPane.showMessageDialog(f, "Login as Teacher");
+							new TeacherFrame(t1.getText());
+							break;
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(f,"Error Occurs");
+							break;
+						}
+					}
+					con.close();
+				}catch(Exception ec)
+				{
+					System.out.print(ec);
+				}
+		 }
+		else if(b1.getSelectedItem().equals("Student"))
+		 {
+			 try
+				{
+					//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                                    Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+					Statement st=con.createStatement();
+					String query="SELECT UniqueID,Password from Students ;";
+					ResultSet rs=st.executeQuery(query);
+					while(rs.next())
+					{
+						if(t1.getText().equals(rs.getString("UniqueID")) && t2.getText().equals(rs.getString("Password")))
+						{
+							JOptionPane.showMessageDialog(f, "Login as Student");
+							new Studentlogin(t1.getText());
+							break;
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(f,"Error Occurs");
+							break;
+						}
+					}
+					con.close();
+				}catch(Exception ec)
+				{
+					System.out.print(ec);
+				}
+		 }
+		
+		}
+}
+			
+}
+

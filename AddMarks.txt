@@ -1,0 +1,245 @@
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+public class AddMarks{
+    
+    static JFrame frame_addMarks;
+    JLabel lbl_name,lbl_ID,lbl_subject1,lbl_subject2,lbl_subject3,lbl_subject4,lbl_subject5;
+    static JTextField txt_name,txt_ID,txt_subject1,txt_subject2,txt_subject3,txt_subject4,txt_subject5;
+    String ID,name,subject1,subject2,subject3,subject4,subject5;
+    static JButton btn_addMarks, btn_close;
+    
+    AddMarks(String id){
+        
+        //Create new Frame
+        frame_addMarks = new JFrame("Add Marks");
+        
+        //Set ContentPane 
+        Container c=frame_addMarks.getContentPane();   
+        c.setLayout(null);
+        
+        //Student Details Heading
+        JLabel main_lbl = new JLabel("Students Details");
+        main_lbl.setFont(new Font("Verdana", Font.BOLD, 18));
+        main_lbl.setBounds(300, 25, 200, 30);
+        c.add(main_lbl);
+        
+        //Fetch Data from DB
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement st=con.createStatement();
+            String query = "SELECT UniqueID,Name,subject1,subject2,subject3,subject4,subject5 FROM Students WHERE UniqueID = '"+id+"'";
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+            ID = rs.getString("UniqueID");
+            name = rs.getString("Name");
+            subject1 = rs.getString("subject1");
+            subject2 = rs.getString("subject2");
+            subject3 = rs.getString("subject3");
+            subject4 = rs.getString("subject4");
+            subject5 = rs.getString("subject5");
+            }
+            con.close();
+        }
+        catch(Exception ae){
+            System.out.println(ae+"");
+        }
+        
+        //Label for Name
+        lbl_name = new JLabel();
+        lbl_name.setText("Name");
+        lbl_name.setBounds(100,100,100,30);
+        
+        //TextField for Name
+        txt_name = new JTextField();
+        txt_name.setText(name);
+        txt_name.setBounds(250, 100, 100, 30);
+        
+        //Label for ID
+        lbl_ID = new JLabel();
+        lbl_ID.setText("ID");
+        lbl_ID.setBounds(100,150,100,30);
+        
+        //TextField for ID
+        txt_ID = new JTextField();
+        txt_ID.setText(ID);
+        txt_ID.setBounds(250,150,100,30);
+        
+        //Label for Subject1
+        lbl_subject1 = new JLabel();
+        lbl_subject1.setText("Subject 1 : ");
+        lbl_subject1.setBounds(100, 200, 100, 30);
+        
+        //TextField for Subject1
+        txt_subject1 = new JTextField();
+        txt_subject1.setText(subject1);
+        txt_subject1.setBounds(250, 200, 100, 30);
+        
+        //Label for Subject2
+        lbl_subject2 = new JLabel();
+        lbl_subject2.setText("Subject 2 : ");
+        lbl_subject2.setBounds(100, 250, 100, 30);
+        
+        //TextField for Subject2
+        txt_subject2 = new JTextField();
+        txt_subject2.setText(subject2);
+        txt_subject2.setBounds(250, 250, 100, 30);
+        
+        //Label for Subject3
+        lbl_subject3 = new JLabel();
+        lbl_subject3.setText("Subject 3 : ");
+        lbl_subject3.setBounds(100, 300, 100, 30);
+        
+        //TextField for Subject3
+        txt_subject3 = new JTextField();
+        txt_subject3.setText(subject3);
+        txt_subject3.setBounds(250,300,100,30);
+        
+        //Label for Subject 4
+        lbl_subject4 = new JLabel();
+        lbl_subject4.setText("Subject 4 : ");
+        lbl_subject4.setBounds(100,350,100,30);
+        
+        //TextField for Subject 4
+        txt_subject4 = new JTextField();
+        txt_subject4.setText(subject4);
+        txt_subject4.setBounds(250,350,100,30);
+        
+        //Label for Subject 5
+        lbl_subject5 = new JLabel();
+        lbl_subject5.setText("Subject 5 : ");
+        lbl_subject5.setBounds(100,400, 100, 30);
+        
+        //TextField for Subject 5
+        txt_subject5 = new JTextField();
+        txt_subject5.setText(subject5);
+        txt_subject5.setBounds(250, 400, 100, 30);
+        
+        //JButton for AddMarks
+        btn_addMarks = new JButton("Add");
+        btn_addMarks.setBounds(300,450, 75, 30);
+        
+        //JButton for Close
+        btn_close = new JButton("Close");
+        btn_close.setBounds(200, 450, 75, 30);
+        
+        //Set Editable False for Name and ID
+        txt_ID.setEditable(false);
+        txt_name.setEditable(false);
+        
+        //Set Font for TextField, Labels and Buttons
+        Font f1 = new Font("Arial", Font.PLAIN, 14);
+        lbl_ID.setFont(f1);
+        txt_ID.setFont(f1);
+        
+        lbl_name.setFont(f1);
+        txt_name.setFont(f1);
+        
+        lbl_subject1.setFont(f1);
+        txt_subject1.setFont(f1);
+        
+        lbl_subject2.setFont(f1);
+        txt_subject2.setFont(f1);
+        
+        lbl_subject3.setFont(f1);
+        txt_subject3.setFont(f1);
+        
+        lbl_subject4.setFont(f1);
+        txt_subject4.setFont(f1);
+        
+        lbl_subject5.setFont(f1);
+        txt_subject5.setFont(f1);
+        
+        btn_addMarks.setFont(f1);
+        btn_close.setFont(f1);
+        
+        //Adding TextFields And Labels to the Content Pane
+        c.add(lbl_name);
+        c.add(txt_name);
+        
+        c.add(lbl_ID);
+        c.add(txt_ID);
+        
+        c.add(lbl_subject1);
+        c.add(txt_subject1);
+        
+        c.add(lbl_subject2);
+        c.add(txt_subject2);
+        
+        c.add(lbl_subject3);
+        c.add(txt_subject3);
+        
+        c.add(lbl_subject4);
+        c.add(txt_subject4);
+        
+        c.add(lbl_subject5);
+        c.add(txt_subject5);
+        
+        c.add(btn_addMarks);
+        c.add(btn_close);
+        
+        //AddActionListener to the ADD Mark Button
+        btn_addMarks.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                action_addMarks();
+            }
+        });
+        
+        //ActionListener for CLOSE Button
+        btn_close.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                action_close();
+            }
+        });
+        //Set Frame
+        frame_addMarks.setLayout(null);
+        frame_addMarks.setVisible(true);
+        frame_addMarks.setBounds(200,100,800,800);
+       // frame_addMarks.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    //Action Event for Add Marks Button
+    public static void action_addMarks(){
+        
+        String str_ID = txt_ID.getText();
+        String str_subject1 = txt_subject1.getText();
+        String str_subject2 = txt_subject2.getText();
+        String str_subject3 = txt_subject3.getText();
+        String str_subject4 = txt_subject4.getText();
+        String str_subject5 = txt_subject5.getText();
+        
+        try{
+        	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement st=con.createStatement();
+            String query = "UPDATE Students SET subject1='"+str_subject1+"',subject2='"+str_subject2+"',subject3='"+str_subject3+"',subject4='"+str_subject4+"',subject5='"+str_subject5+"' WHERE UniqueID = '"+str_ID+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(btn_addMarks,"Updated Successfully");
+        }
+        catch(Exception ae){
+            System.out.println(ae+"");
+        }
+    }
+    
+    //ActionListener for Close
+    public static void action_close(){
+        frame_addMarks.dispose();
+    }
+}

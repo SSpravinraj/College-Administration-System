@@ -1,0 +1,402 @@
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+import javax.swing.*;
+public class HostelStudent extends JFrame implements ActionListener{
+      JFrame f1;
+     JLabel lbl_stuname,lbl_stuid,lbl_stugender,lbl_studob,lbl_studept,lbl_stuphno,lbl_stuaddress,lbl_stublock,lbl_sturoom,lbl_title;
+     JTextField txt_stuname,txt_stuid,txt_studept,txt_stuphno,txt_stuaddress,txt_stugender,txt_studob;  
+     int flag=0;
+     String add_stuid,update_stuid;
+     
+     JComboBox jcb_stublock,jcb_sturoom;
+    JButton b_stuadd,b_stuupdate,b_stuok,b_studelete,b_stuclear;
+    HostelStudent()
+    {
+        
+       f1=new JFrame("Hostellers info");
+       f1.getContentPane().setBackground(Color.pink);
+       f1.setLayout(null);
+        Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Hosteller Info");
+        lbl_heading.setBounds(200,50,200,40);
+        f1.add(lbl_heading);
+        lbl_heading.setFont(f);
+       
+        lbl_stuname=new JLabel("Name");
+        lbl_stuid=new JLabel("UniqueID");
+        lbl_stugender=new JLabel("Gender");
+        lbl_studob=new JLabel("DOB");
+        lbl_studept=new JLabel("Department");
+        lbl_stuphno=new JLabel("Phonenumber");
+        lbl_stuaddress=new JLabel("Address");
+        lbl_stublock=new JLabel("Block");
+        lbl_sturoom=new JLabel("Roomno");
+        
+        txt_stuname=new JTextField();
+        txt_stuid=new JTextField();
+        txt_studept=new JTextField();
+        txt_stuphno=new JTextField(); 
+        txt_stuaddress=new JTextField();
+        txt_stugender=new JTextField();
+        txt_studob=new JTextField();
+                
+        jcb_stublock=new JComboBox();
+        
+        jcb_stublock.addItem("B1");
+        jcb_stublock.addItem("B2");
+        jcb_stublock.addItem("B3");
+        jcb_stublock.addItem("B4");
+        jcb_stublock.addItem("B5");
+        
+        String stu_room[]=new String[20];
+        
+        for(int i=1;i<15;i++)
+        {
+            stu_room[i-1]="A"+Integer.toString(i);
+        }
+        jcb_sturoom=new JComboBox(stu_room);
+        
+        
+        b_stuadd=new JButton("Add");
+        b_stuupdate=new JButton("Update");
+        b_stuok=new JButton("Ok");
+        b_studelete=new JButton("Delete");
+        b_stuclear=new JButton("Clear");
+        
+        
+        
+        f1.add(lbl_stuname);
+        f1.add(lbl_stuid);
+        f1.add(lbl_stugender);
+        f1.add(lbl_studob);
+        f1.add(lbl_studept);
+        f1.add(lbl_stuphno);
+        f1.add(lbl_stuaddress);
+        f1.add(lbl_stublock);
+        f1.add(lbl_sturoom);
+        f1.add(txt_stuname);
+        f1.add(txt_stuid);
+        f1.add(txt_stugender);
+        f1.add(txt_studob);
+        f1.add(txt_studept);
+        f1.add(txt_stuphno);
+        f1.add(txt_stuaddress);
+        f1.add(jcb_stublock);
+        f1.add(jcb_sturoom);
+        f1.add(b_stuadd);
+        f1.add(b_stuupdate);
+        f1.add(b_stuok);
+        f1.add(b_studelete);
+        f1.add(b_stuclear);
+        
+        lbl_stuname.setBounds(100,100,100,25);
+        lbl_stuid.setBounds(100,150,100,25);
+        lbl_stugender.setBounds(100,200,100,25);
+        lbl_studob.setBounds(100,250,100,25);
+        lbl_studept.setBounds(100,300,100,25);
+        lbl_stuphno.setBounds(100,350,100,25);
+        lbl_stuaddress.setBounds(100,400,100,25);
+        lbl_stublock.setBounds(100,450,100,25);
+        lbl_sturoom.setBounds(100,500,100,25);
+        
+        txt_stuname.setBounds(250,100,200,25);
+        txt_stuid.setBounds(250,150,200,25);
+        txt_stugender.setBounds(250,200,200,25);
+        txt_studob.setBounds(250,250,200,25);
+        txt_studept.setBounds(250,300,200,25);
+        txt_stuphno.setBounds(250,350,200,25);
+        txt_stuaddress.setBounds(250,400,200,25);
+        
+        jcb_stublock.setBounds(250,450,100,25);
+        jcb_sturoom.setBounds(250,500,100,25);
+        
+        b_stuadd.setBounds(100,550,100,25);
+        b_stuupdate.setBounds(230,550,100,25);
+        b_stuok.setBounds(360,550,100,25);
+        b_studelete.setBounds(100,600,100,25);
+        b_stuclear.setBounds(230,600,100,25);
+        
+        b_stuadd.addActionListener(this);
+        b_stuok.addActionListener(this);
+        b_stuupdate.addActionListener(this);
+        b_studelete.addActionListener(this);
+        b_stuclear.addActionListener(this);
+        
+        
+        
+       f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f1.setSize(600,700);
+        f1.setVisible(true);
+        
+        
+        
+        
+       
+    }
+    public static void main(String args[])
+    {
+        new HostelStudent();
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        if(ob==b_stuadd)
+        {
+            flag=1;
+      
+            add_stuid=JOptionPane.showInputDialog("enter the  Student Id");
+            try{
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+               Statement  st=con.createStatement();
+                  
+               String query="select * from students where UniqueId='"+add_stuid+"'";
+          
+              ResultSet rs = st.executeQuery(query);
+              while (rs.next())
+              {
+               String stu_residence=rs.getString("Residence");
+               if(stu_residence.equals("Hosteller"))
+               {
+                   String str_name,str_id,str_gender,str_dob,str_dept,str_phno,str_address;
+                   str_name=rs.getString("Name");
+                   str_id=rs.getString("UniqueID");
+                   str_gender=rs.getString("Gender");
+                   str_dob=rs.getString("DOB");
+                   str_dept=rs.getString("Department");
+                   str_phno=rs.getString("Phone");
+                   str_address=rs.getString("Address");
+                   txt_stuname.setText(str_name);
+                   txt_stuid.setText(str_id);
+                   txt_stugender.setText(str_gender);
+                   txt_studob.setText(str_dob);
+                   txt_studept.setText(str_dept);
+                   txt_stuphno.setText(str_phno);
+                   txt_stuaddress.setText(str_address);
+                   
+                   txt_stuid.setEditable(false);
+                   txt_stugender.setEditable(false);
+                   txt_studob.setEditable(false);
+                   txt_studept.setEditable(false);
+                   
+                   b_stuadd.setEnabled(false);
+                   b_stuupdate.setEnabled(false);
+                   b_studelete.setEnabled(false);
+                   b_stuclear.setEnabled(false);
+                   
+                   
+               }
+               else
+               {
+                   JOptionPane.showMessageDialog(f1,"The Given ID is not a Hosteller");
+               }
+               
+
+              }  
+              
+              con.close();
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-----"+ex);
+            }
+        }
+        if(ob==b_stuok)
+        {
+           if(flag==1)
+           {
+           try
+           {
+           String str_stuname,str_stuid,str_stugender,str_studob,str_studept,str_stuphno,str_stuaddress,str_stublock,str_sturoom;
+           str_stuname=txt_stuname.getText();
+           str_stuid=txt_stuid.getText();
+           str_stugender=txt_stugender.getText();
+           str_studob=txt_studob.getText();
+           str_studept=txt_studept.getText();
+           str_stuphno=txt_stuphno.getText();
+           str_stuaddress=txt_stuaddress.getText();
+           str_stublock=jcb_stublock.getSelectedItem().toString();
+           str_sturoom=jcb_sturoom.getSelectedItem().toString();
+            Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+            String query="select * from Hosteller";
+          
+            ResultSet rs = st.executeQuery(query);
+           
+            int f=0;
+            while(rs.next())
+            {
+                String add_stuid1=rs.getString("UniqueID");
+                if(add_stuid.equals(add_stuid1))
+                {
+                    f=1;
+                    break;
+                }
+                else
+                {
+                    f=0;
+                }
+            }
+            if(f==0)
+            {
+                 String query1="insert into Hosteller values('"+str_stuname+"','"+str_stuid+"','"+str_stugender+"','"+str_studob+"','"+str_studept+"','"+str_stuphno+"','"+str_stuaddress+"','"+str_stublock+"','"+str_sturoom+"')";
+                 st.executeUpdate(query1);
+              
+                JOptionPane.showMessageDialog(f1,"Added Successfully");
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(f1,"ID already exists");
+            }
+            
+            con.close();
+            txt_stuid.setEditable(true);
+            txt_stugender.setEditable(true);
+            txt_studob.setEditable(true);
+            txt_studept.setEditable(true);
+                   
+            b_stuadd.setEnabled(true);
+            b_stuupdate.setEnabled(true);
+            b_studelete.setEnabled(true);
+            b_stuclear.setEnabled(true);
+             
+                   
+            }
+            catch(Exception ex)
+            {
+                System.out.println(" "+ex);
+            }
+            flag=0;
+            }
+            if(flag==2)
+            {
+                try
+                {
+                	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+                Statement  st = con.createStatement();
+           
+            
+                String query="update Hosteller set Name='"+txt_stuname.getText()+"',Address='"+txt_stuaddress.getText()+"',Phone='"+txt_stuphno.getText()+"',Block='"+jcb_stublock.getSelectedItem().toString()+"',Room='"+jcb_sturoom.getSelectedItem().toString()+"'  where UniqueId='"+update_stuid+"'";
+                st.executeUpdate(query);
+                con.close();
+                JOptionPane.showMessageDialog(f1,"Updated Successfully");
+                  txt_stuid.setEditable(true);
+                   txt_stugender.setEditable(true);
+                   txt_studob.setEditable(true);
+                   txt_studept.setEditable(true);
+                   
+                   b_stuadd.setEnabled(true);
+                   b_stuupdate.setEnabled(true);
+                   b_studelete.setEnabled(true);
+                   b_stuclear.setEnabled(true);
+               
+                
+           }
+           catch(Exception ex)
+            {
+                       System.out.println("--->"+ex);
+            }
+                
+                flag=0;
+            }
+        }
+        if(ob==b_stuupdate)
+        {
+            flag=2;
+            String stu_id;
+            update_stuid=JOptionPane.showInputDialog("enter the  Student Id to be Updated");
+            try{
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+               Statement  st=con.createStatement();
+                  
+               String query="select * from Hosteller where UniqueId='"+update_stuid+"'";
+          
+              ResultSet rs = st.executeQuery(query);
+              while(rs.next())
+              {
+              
+                   String str_name,str_id,str_gender,str_dob,str_dept,str_phno,str_address;
+                   str_name=rs.getString("Name");
+                   str_id=rs.getString("UniqueID");
+                   str_gender=rs.getString("Gender");
+                   str_dob=rs.getString("DOB");
+                   str_dept=rs.getString("Department");
+                   str_phno=rs.getString("Phone");
+                   str_address=rs.getString("Address");
+                   txt_stuname.setText(str_name);
+                   txt_stuid.setText(str_id);
+                   txt_stugender.setText(str_gender);
+                   txt_studob.setText(str_dob);
+                   txt_studept.setText(str_dept);
+                   txt_stuphno.setText(str_phno);
+                   txt_stuaddress.setText(str_address);
+              }
+                   
+                   txt_stuid.setEditable(false);
+                   txt_stugender.setEditable(false);
+                   txt_studob.setEditable(false);
+                   txt_studept.setEditable(false);
+                   
+                   b_stuadd.setEnabled(false);
+                   b_stuupdate.setEnabled(false);
+                   b_studelete.setEnabled(false);
+                   b_stuclear.setEnabled(false);
+                   con.close();
+            }
+            catch(Exception ex)
+            {
+               JOptionPane.showMessageDialog(f1,"Given Id not exists");
+            }
+        }
+        if(ob==b_studelete)
+        {
+            String str_studeleteid;
+            str_studeleteid=JOptionPane.showInputDialog("enter the Delete ID");
+            try
+           {
+          
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+           
+            
+            String query="delete from Hosteller where UniqueId='"+str_studeleteid+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(f1,"Deleted Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-->"+ex);
+            }
+           
+        }
+        if(ob==b_stuclear)
+        {
+            
+            txt_stuname.setText("");
+            txt_stuaddress.setText("");
+            txt_stuphno.setText("");
+            txt_studob.setText("");
+            
+            txt_studept.setText("");
+            txt_stuid.setText("");
+            txt_stugender.setText("");
+            jcb_stublock.setSelectedItem(null);
+            jcb_sturoom.setSelectedItem(null);
+            
+        }
+                
+    }
+}
+

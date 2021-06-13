@@ -1,0 +1,182 @@
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+public class PrintID  implements ActionListener{
+	static JFrame f=new JFrame("ID GENERATOR");
+    Container container = f.getContentPane();
+     JPanel headerPanel = new JPanel();
+    JPanel bodyPanel = new JPanel();
+     JLabel headerTitleLabel = new JLabel(" ID CARD GENERATOR ");
+    JLabel nameLabel=new JLabel("NAME OF TEACHER     :");
+    JLabel numberLabel=new JLabel("MOBILE NUMBER            :");
+     JLabel genderLabel=new JLabel("GENDER                      :");
+     JLabel degreLabel=new JLabel("DEGREE     :");
+     JLabel imageLabel=new JLabel();
+    JLabel name=new JLabel();
+    JLabel number=new JLabel();
+    JLabel gender=new JLabel();
+    JLabel degree=new JLabel();
+     JLabel paneltitle=new JLabel();
+     JButton printButton=new JButton("Print");
+    PrintID()
+    {
+    	 Image icon = Toolkit.getDefaultToolkit().getImage("C:/Users/User/Desktop/Pro Images/pro.png");  
+         f.setIconImage(icon);
+         f.setVisible(true);
+         f.setBounds(270, 70, 870, 610);
+         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         f.setResizable(false);
+        setLayoutManager();
+        setLocationAndSize();
+        setHeaderPanel();
+        setBodyPanel();
+        setFontAndColor();
+        addComponentsToContainer();
+        Listener();
+    }
+    public void setLayoutManager(){
+        container.setBackground(Color.WHITE);
+        container.setLayout(null);
+    }
+    public void setHeaderPanel(){
+        headerPanel.setBackground(new Color(150,5,37));
+        headerPanel.setLayout(new GridLayout(1,1,0,0));  
+        ImageIcon iconLogo = new ImageIcon(new ImageIcon("C:/Users/User/Desktop/id.png").getImage().getScaledInstance(75,75, Image.SCALE_SMOOTH));
+        headerTitleLabel.setIcon(iconLogo);
+        headerTitleLabel.setFont(new Font("Roboto", Font.BOLD,26));
+        headerTitleLabel.setForeground(Color.WHITE);
+        headerPanel.add(headerTitleLabel);
+    }
+    public void setBodyPanel(){
+        paneltitle.setBounds(275,35,300,20);
+         nameLabel.setBounds(70,100,500,20);
+         numberLabel.setBounds(70,140,600,20);
+         genderLabel.setBounds(70,180,700,20);
+         degreLabel.setBounds(70,220,900,20);
+         imageLabel.setBounds(500,0,250,250);
+       ImageIcon image = new ImageIcon(new ImageIcon("C:/Users/User/Desktop/Pro Images/teacher.png").getImage().getScaledInstance(90,90, Image.SCALE_SMOOTH));
+         imageLabel.setIcon(image);
+         name.setBounds(270,100,170,20);
+        number.setBounds(270,140,170,20);
+         gender.setBounds(270,180,170,20);
+         degree.setBounds(270,220,170,20);
+         printButton.setBounds(350,450,100,50);
+         bodyPanel.add(nameLabel);
+         bodyPanel.add(numberLabel);
+         bodyPanel.add(degreLabel);
+         bodyPanel.add(genderLabel);
+         bodyPanel.add(imageLabel);
+         bodyPanel.add(name);
+         bodyPanel.add(number);
+         bodyPanel.add(gender);
+         bodyPanel.add(degree);
+         bodyPanel.add(paneltitle);
+         bodyPanel.setLayout(null);
+    }
+    public void setFontAndColor(){  
+        paneltitle.setFont(new Font("Roboto", Font.BOLD,20));
+        paneltitle.setForeground(new Color(237, 24, 24));
+        nameLabel.setFont(new Font("Roboto", Font.PLAIN,17));
+        numberLabel.setFont(new Font("Roboto", Font.PLAIN,17));
+        degreLabel.setFont(new Font("Roboto", Font.PLAIN,17));
+        genderLabel.setFont(new Font("Roboto", Font.PLAIN,17));
+        name.setFont(new Font("Times New Roman", Font.PLAIN,17));
+        number.setFont(new Font("Times New Roman", Font.PLAIN,17));
+        gender.setFont(new Font("Times New Roman", Font.PLAIN,17));
+        degree.setFont(new Font("Times New Roman", Font.PLAIN,17));
+        printButton.setBackground(new Color(69, 77, 71));
+        printButton.setForeground(Color.white);
+    }
+    public void setLocationAndSize(){
+        headerPanel.setBounds(0, 0, 870, 70);
+        bodyPanel.setBounds(60,95,700,330);
+    }
+    public void addComponentsToContainer(){
+        container.add(headerPanel);
+        container.add(bodyPanel);
+        container.add(printButton);
+    }  
+    public void Listener()
+    {
+        printButton.addActionListener( this);
+    }
+    public void actionPerformed(ActionEvent e) {
+        paneltitle.setText(" ID-CARD ");
+        if(e.getSource()==printButton)
+        {
+          String n=null,m=null,d=null,l=null;
+          String OP = JOptionPane.showInputDialog("ENTER TEACHER ID");
+            try {
+            	// Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                Statement st=con.createStatement();
+                String query = "SELECT Name,Phone,Gender,Department from teachers WHERE UniqueID='"+OP+"'";
+                ResultSet rs = st.executeQuery(query);
+                while(rs.next())
+                {
+                    n=rs.getString("Name");
+                    m=rs.getString("Phone");
+                    d=rs.getString("Gender");
+                    l=rs.getString("Department");
+                }
+            } catch (Exception ej) {
+                System.out.println(ej);
+            }
+            name.setText(n);
+            number.setText(m);
+            gender.setText(d);
+            degree.setText(l);
+       
+            name.getText();
+            number.getText();
+            gender.getText();
+            degree.getText();
+        }
+        PrinterJob job = PrinterJob.getPrinterJob();
+            job.setJobName("Print ID");
+           
+            job.setPrintable(new Printable(){
+            public int print(Graphics pg,PageFormat pf, int pageNum){
+                    pf.setOrientation(PageFormat.PORTRAIT);
+                 if(pageNum>0){
+                    return Printable.NO_SUCH_PAGE;
+                }
+               
+                Graphics2D g2 = (Graphics2D)pg;
+                g2.translate(pf.getImageableX(), pf.getImageableY());
+                g2.scale(0.6,0.6);
+               
+                bodyPanel.paint(g2);    
+               
+                return Printable.PAGE_EXISTS;
+                         
+               
+            }
+    });
+         
+        boolean ok = job.printDialog();
+        if(ok){
+        try{
+           
+        job.print();
+        }
+        catch (PrinterException ex){}
+        }
+        }
+    public static void main(String[] args) {
+         new PrintID();
+    }
+}
+

@@ -1,0 +1,363 @@
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+import javax.swing.*;
+public class Addwarden extends JFrame implements ActionListener,ItemListener{
+    JFrame f1;
+    JLabel lbl_wardenname,lbl_wardenaddress,lbl_wardenphno,lbl_wardendob,lbl_wardenage,lbl_wardengender,lbl_wardenid,lbl_wardenblock;
+    JTextField txt_wardenname,txt_wardenaddress,txt_wardenphno,txt_wardenage,txt_wardenid,txt_wardendob;
+    JComboBox  jcb_wardenblock;
+    ButtonGroup bg;
+    JRadioButton rb_male,rb_female;
+    JButton b_wardenadd,b_wardenupdate,b_wardenok,b_wardendelete,b_wardenclear,b_wardengenerate;
+    String str_wardengender,str_wardenid;
+    Addwarden()
+    {
+        f1=new JFrame("Warden Info");
+        f1.setLayout(null);
+        Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Warden Info");
+        lbl_heading.setBounds(200,50,200,40);
+        f1.add(lbl_heading);
+        lbl_heading.setFont(f);
+        lbl_wardenname=new JLabel("Name");
+        lbl_wardenaddress=new JLabel("Address");
+        lbl_wardenphno=new JLabel("Phonenumber");
+        lbl_wardendob=new JLabel("DOB");
+        lbl_wardenage=new JLabel("Age");
+        lbl_wardengender=new JLabel("Gender");
+        lbl_wardenid=new JLabel("Unique ID");
+        lbl_wardenblock=new JLabel("Block");
+        txt_wardenname=new JTextField("");
+        txt_wardenaddress=new JTextField("");
+        txt_wardenphno=new JTextField("");
+        
+        txt_wardenage=new JTextField("");
+        txt_wardenid=new JTextField("");
+        txt_wardendob=new JTextField("");
+        
+        bg=new ButtonGroup();
+        rb_male=new JRadioButton("Male");
+        rb_female=new JRadioButton("Female");
+        bg.add(rb_male);
+        bg.add(rb_female);
+                
+        jcb_wardenblock=new JComboBox();
+        jcb_wardenblock.addItem("B1");
+        jcb_wardenblock.addItem("B2");
+        jcb_wardenblock.addItem("B3");
+        jcb_wardenblock.addItem("B4");
+        jcb_wardenblock.addItem("B5");
+        
+        b_wardenadd=new JButton("Add");
+        b_wardenupdate=new JButton("Update");
+        b_wardenok=new JButton("Ok");
+        b_wardendelete=new JButton("Delete");
+        b_wardenclear=new JButton("Clear");
+        b_wardengenerate=new JButton("Generate");
+        
+        f1.add(lbl_wardenname);
+        f1.add(lbl_wardenaddress);
+        f1.add(lbl_wardenphno);
+        f1.add(lbl_wardendob);
+        f1.add(lbl_wardenage);
+        f1.add(lbl_wardengender);
+        f1.add(lbl_wardenid);
+        f1.add(lbl_wardenblock);
+        f1.add(txt_wardenname);
+        f1.add(txt_wardenaddress);
+        f1.add(txt_wardenphno);
+      
+        f1.add(txt_wardenage);
+        f1.add(txt_wardenid);
+       f1.add(txt_wardendob);
+        f1.add(rb_male);
+        f1.add(rb_female);
+        f1.add(jcb_wardenblock);
+        f1.add(b_wardenadd);
+        f1.add(b_wardenupdate);
+        f1.add(b_wardenok);
+        f1.add(b_wardendelete);
+        f1.add(b_wardenclear);
+       f1.add(b_wardengenerate);
+            
+        lbl_wardenname.setBounds(100,100,200,25);
+        lbl_wardenaddress.setBounds(100,150,200,25);
+        lbl_wardenphno.setBounds(100,200,200,25);
+        lbl_wardendob.setBounds(100,250,200,25);
+        lbl_wardenage.setBounds(100,300,200,25);
+        lbl_wardengender.setBounds(100,350,200,25);
+        lbl_wardenid.setBounds(100,400,200,25);
+        lbl_wardenblock.setBounds(100,450,200,25);
+        
+        txt_wardenname.setBounds(300,100,200,30);
+        txt_wardenaddress.setBounds(300,150,200,30);
+        txt_wardenphno.setBounds(300,200,200,30);
+        txt_wardenage.setBounds(300,300,200,30);
+        txt_wardenid.setBounds(300,400,200,30);
+        txt_wardendob.setBounds(300,250,200,30);
+        
+        
+         
+        rb_male.setBounds(300,350,80,25);
+        rb_female.setBounds(440,350,100,25);
+         
+        jcb_wardenblock.setBounds(300,450,200,30);
+        
+        b_wardenadd.setBounds(100,550,100,25);
+        b_wardenupdate.setBounds(230,550,100,25);
+        b_wardenok.setBounds(360,550,100,25);
+        b_wardendelete.setBounds(100,600,100,25);
+        b_wardenclear.setBounds(230,600,100,25);
+        b_wardengenerate.setBounds(500,400,100,25);
+        txt_wardenid.setEditable(false);
+        
+        //f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f1.setSize(700,700);
+        f1.setVisible(true);
+        b_wardenadd.addActionListener(this);
+        b_wardengenerate.addActionListener(this);
+        b_wardenupdate.addActionListener(this);
+        b_wardenok.addActionListener(this);
+        b_wardendelete.addActionListener(this);
+        b_wardenclear.addActionListener(this);
+        rb_male.addItemListener(this);
+        rb_female.addItemListener(this);
+       
+        
+       
+    }
+   
+     public void itemStateChanged(ItemEvent ie){
+
+        ItemSelectable itemselected=ie.getItemSelectable();
+
+        if(itemselected==rb_male){
+                str_wardengender="Male";
+        }
+        else if(itemselected==rb_female){
+                str_wardengender="Female";
+        }
+    }
+  
+     int ui=1;
+     String idd="";
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        
+        if(ob==b_wardengenerate)
+		{
+			
+			try{
+				 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+				Statement st=con.createStatement();
+				String query="Select Id from warden";
+				ResultSet rs=st.executeQuery(query);
+				while(rs.next())
+				{
+					idd=rs.getString("Id");
+					ui=Integer.parseInt(idd);
+					if(idd==null)
+					{
+						ui=1;
+					}
+					else
+					{
+						ui=ui+1;
+					}
+				}
+				
+				con.close();
+			}
+			catch(Exception ec)
+			{
+				System.out.print(ec);
+			}
+			txt_wardenid.setText(ui+"");
+		}
+         
+        if(ob==b_wardenadd)
+        {
+           try
+           {
+           String str_wardenname,str_wardenaddress,str_wardenphno,str_wardendob,str_wardenage,str_wardenblock,str_wardenid;
+           str_wardenname=txt_wardenname.getText();
+           str_wardenaddress=txt_wardenaddress.getText();
+           str_wardenphno=txt_wardenphno.getText();
+           str_wardendob=txt_wardendob.getText();
+           str_wardenage=txt_wardenage.getText();
+           str_wardenblock=jcb_wardenblock.getSelectedItem().toString();
+           str_wardenid=txt_wardenid.getText();
+           Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+           
+            
+            String query="insert into warden values('"+str_wardenname+"','"+str_wardenaddress+"','"+str_wardenphno+"','"+str_wardendob+"','"+str_wardenage+"','"+str_wardengender+"','"+str_wardenid+"','"+str_wardenblock+"')";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(jcb_wardenblock,"Added Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println(" "+ex);
+            }
+           
+           
+           
+           
+        }
+        if(ob==b_wardenupdate)
+        {
+            str_wardenid=JOptionPane.showInputDialog("enter the Warden Id");
+                
+        try{
+        	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+           Statement  st=con.createStatement();
+                  
+            String query="select * from warden where Id='"+str_wardenid+"'";
+
+           ResultSet rs = st.executeQuery(query);
+                  
+            while(rs.next())
+            {
+            txt_wardenname.setText(rs.getString("Name"));
+            txt_wardenaddress.setText(rs.getString("Address"));
+                            
+            txt_wardenphno.setText(rs.getString("Phone"));
+            txt_wardendob.setText(rs.getString("DOB"));
+            
+            txt_wardenage.setText(rs.getString("Age"));
+            txt_wardenid.setText(rs.getString("Id"));
+  
+            
+            
+            jcb_wardenblock.setSelectedItem(rs.getString("Block"));
+            
+                          
+            }       
+            
+            con.close();
+            
+           
+              
+                          
+            
+                         
+                           
+                                                        
+            
+            rb_male.setEnabled(false);
+            rb_female.setEnabled(false);
+            
+            txt_wardenage.setEditable(false);
+            
+            txt_wardendob.setEditable(false);
+            
+           
+           b_wardenadd.setEnabled(false);
+           b_wardengenerate.setEnabled(false);
+           b_wardendelete.setEnabled(false);
+           b_wardenupdate.setEnabled(false);
+              
+                        
+                   
+           
+        }
+        catch(Exception exp){
+          if(exp instanceof SQLException)
+				{
+					JOptionPane.showMessageDialog(b_wardengenerate, "ID Doesn't Exist");
+				}
+				
+          if(exp instanceof NullPointerException)
+          {
+        	  JOptionPane.showMessageDialog(b_wardengenerate, "Fields are empty");
+          }
+        }
+        
+       
+        }
+        if(ob==b_wardenok)
+        {
+            try
+           {
+             Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                Statement  st = con.createStatement();
+           
+            
+                String query="update warden set Name='"+txt_wardenname.getText()+"',Address='"+txt_wardenaddress.getText()+"',Phone='"+txt_wardenphno.getText()+"',Block='"+jcb_wardenblock.getSelectedItem().toString()+"'  where Id='"+str_wardenid+"'";
+                st.executeUpdate(query);
+                con.close();
+                JOptionPane.showMessageDialog(jcb_wardenblock,"Updated Successfully");
+               txt_wardenid.setEditable(true);
+            rb_male.setEnabled(true);
+            rb_female.setEnabled(true);
+            
+            txt_wardenage.setEditable(true);
+            
+            txt_wardendob.setEditable(true);
+                 b_wardenadd.setEnabled(true);
+                b_wardengenerate.setEnabled(true);
+                b_wardendelete.setEnabled(true);
+               b_wardenupdate.setEnabled(true);
+                
+           }
+           catch(Exception ex)
+            {
+                       System.out.println("--->"+ex);
+            }
+        }
+        if(ob==b_wardendelete)
+        {
+            String str_wardendeleteid;
+            str_wardendeleteid=JOptionPane.showInputDialog("enter the Delete ID");
+            try
+           {
+          
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+           
+            
+            String query="delete from warden where Id='"+str_wardendeleteid+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(jcb_wardenblock,"Deleted Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-->"+ex);
+            }
+           
+            
+        }
+        if(ob==b_wardenclear)
+        {
+            txt_wardenname.setText("");
+            txt_wardenaddress.setText("");
+            txt_wardenphno.setText("");
+            txt_wardendob.setText("");
+            
+            txt_wardenage.setText("");
+            txt_wardenid.setText("");
+           bg.clearSelection();
+           jcb_wardenblock.setSelectedItem(null);
+          
+            
+           
+            
+        }
+    }
+     public static void main(String args[])
+    {
+        new Addwarden();
+    }
+}

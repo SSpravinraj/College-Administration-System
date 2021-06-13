@@ -1,0 +1,83 @@
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import net.proteanit.sql.DbUtils;
+
+public class ShowStudents {
+    JFrame frame_showStudents;
+    JTable table_box;
+    static JButton btn_Show;
+    
+    ShowStudents(){
+        
+        //Creating Frame
+        frame_showStudents = new JFrame("Student Data");
+        
+        //Set ContentPane 
+        Container c=frame_showStudents.getContentPane();   
+        c.setLayout(null);
+        
+        //Student Details Heading
+        JLabel main_lbl = new JLabel("Students Details");
+        main_lbl.setFont(new Font("Verdana", Font.BOLD, 18));
+        main_lbl.setBounds(300, 25, 200, 30);
+        c.add(main_lbl);
+        
+        //Add Show Button
+        btn_Show = new JButton("Show");
+        btn_Show.setFont(new Font("Verdana", Font.BOLD, 15));
+        btn_Show.setBounds(600, 50, 95, 30);
+        c.add(btn_Show);
+        
+        //Add Scroll Bar
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(50, 100, 700, 500);
+        c.add(scrollPane);
+        
+        //Show Students Details Table
+        table_box = new JTable();
+        scrollPane.setViewportView(table_box);
+        table_box.setFont(new Font("Verdana", Font.BOLD, 16));
+        
+        //Set Frame
+        frame_showStudents.setLayout(null);
+        frame_showStudents.setVisible(true);
+        frame_showStudents.setBounds(200,100,800,800);
+        frame_showStudents.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //Adding Action Listener to Show Button
+        btn_Show.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //Connecting to DB and Fetching Student Data
+                try{
+                	//Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+                        Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                    String query = "SELECT UniqueID,Name,Department,subject1,subject2,subject3,subject4,subject5 FROM Students";
+                    PreparedStatement st = con.prepareStatement(query);
+                    ResultSet rs = st.executeQuery();
+                    table_box.setModel(DbUtils.resultSetToTableModel(rs));
+                    con.close();
+                }
+                catch(Exception ae){
+                    System.out.println(ae+"");
+                }
+            }
+        });
+    }
+}
+
+

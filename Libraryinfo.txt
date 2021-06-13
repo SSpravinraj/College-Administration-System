@@ -1,0 +1,367 @@
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+import javax.swing.*;
+public class Libraryinfo extends JFrame implements ActionListener,ItemListener{
+     JFrame f1;
+    JLabel lbl_lbname,lbl_lbqua,lbl_lbphno,lbl_lbdob,lbl_lbage,lbl_lbgender,lbl_lbid,lbl_lbdes,lbl_lbexp;
+    JTextField txt_lbname,txt_lbphno,txt_lbage,txt_lbid,txt_lbdob,txt_lbqua,txt_lbexp;
+    JComboBox  jcb_lbdes;
+    ButtonGroup bg;
+    JRadioButton rb_male,rb_female;
+    JButton b_lbadd,b_lbupdate,b_lbok,b_lbdelete,b_lbclear,b_lbgenerate;
+    String str_lbgender,str_lbid;
+    Libraryinfo()
+    {
+        f1=new JFrame("Library Info");
+        f1.setLayout(null);
+        Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Library Info");
+        lbl_heading.setBounds(200,50,200,40);
+        f1.add(lbl_heading);
+        lbl_heading.setFont(f);
+        lbl_lbname=new JLabel("Name");
+        lbl_lbqua=new JLabel("Qualification");
+        lbl_lbphno=new JLabel("Phonenumber");
+        lbl_lbdob=new JLabel("DOB");
+        lbl_lbage=new JLabel("Age");
+        lbl_lbgender=new JLabel("Gender");
+        lbl_lbid=new JLabel("Unique ID");
+        lbl_lbdes=new JLabel("Designation"); 
+        lbl_lbexp=new JLabel("Experience");
+        
+        txt_lbname=new JTextField("");
+        txt_lbphno=new JTextField("");
+        txt_lbqua=new JTextField();
+        txt_lbexp=new JTextField();
+        txt_lbage=new JTextField("");
+        txt_lbid=new JTextField("");
+        txt_lbdob=new JTextField("");
+        
+        bg=new ButtonGroup();
+        rb_male=new JRadioButton("Male");
+        rb_female=new JRadioButton("Female");
+        bg.add(rb_male);
+        bg.add(rb_female);
+                
+        jcb_lbdes=new JComboBox();
+       jcb_lbdes.addItem("Incharge");
+       jcb_lbdes.addItem("Digital Staff");
+       jcb_lbdes.addItem("Books Staff");
+       jcb_lbdes.addItem("Receptionist");
+       jcb_lbdes.addItem("Cleaner");
+       
+        
+        b_lbadd=new JButton("Add");
+        b_lbupdate=new JButton("Update");
+        b_lbok=new JButton("Ok");
+        b_lbdelete=new JButton("Delete");
+        b_lbclear=new JButton("Clear");
+        b_lbgenerate=new JButton("Generate");
+        
+        f1.add(lbl_lbname);
+        f1.add(lbl_lbqua);
+        f1.add(lbl_lbphno);
+        f1.add(lbl_lbdob);
+        f1.add(lbl_lbage);
+        f1.add(lbl_lbgender);
+        f1.add(lbl_lbid);
+        f1.add(lbl_lbdes);
+        f1.add(lbl_lbexp);
+        f1.add(txt_lbname);
+        f1.add(txt_lbqua);
+        f1.add(txt_lbphno);
+      
+        f1.add(txt_lbage);
+        f1.add(txt_lbid);
+        f1.add(txt_lbexp);
+        f1.add(txt_lbdob);
+     
+    
+        f1.add(rb_male);
+        f1.add(rb_female);
+        f1.add(jcb_lbdes);
+        f1.add(b_lbadd);
+        f1.add(b_lbupdate);
+        f1.add(b_lbok);
+        f1.add(b_lbdelete);
+        f1.add(b_lbclear);
+       f1.add(b_lbgenerate);
+            
+        lbl_lbname.setBounds(100,100,200,25);
+        lbl_lbqua.setBounds(100,150,200,25);
+        lbl_lbdob.setBounds(100,200,200,25);
+        lbl_lbage.setBounds(100,250,200,25);
+        lbl_lbgender.setBounds(100,300,200,25);
+        lbl_lbexp.setBounds(100,350,200,25);
+        lbl_lbphno.setBounds(100,400,200,25);
+        lbl_lbdes.setBounds(100,450,200,25);
+        lbl_lbid.setBounds(100,500,200,25);
+        
+        txt_lbname.setBounds(250,100,200,25);
+        txt_lbqua.setBounds(250,150,200,25);
+        txt_lbdob.setBounds(250,200,200,25);
+        txt_lbage.setBounds(250,250,200,25);
+        
+        txt_lbexp.setBounds(250,350,200,25);
+        txt_lbphno.setBounds(250,400,200,25);
+        txt_lbid.setBounds(250,500,200,25);
+        
+        
+        
+        
+         
+        rb_male.setBounds(250,300,80,25);
+        rb_female.setBounds(340,300,100,25);
+         
+        jcb_lbdes.setBounds(250,450,200,30);
+        
+        b_lbadd.setBounds(100,550,100,25);
+        b_lbupdate.setBounds(230,550,100,25);
+        b_lbok.setBounds(360,550,100,25);
+        b_lbdelete.setBounds(100,600,100,25);
+        b_lbclear.setBounds(230,600,100,25);
+        b_lbgenerate.setBounds(500,500,100,25);
+        txt_lbid.setEditable(false);
+        
+         b_lbadd.addActionListener(this);
+        b_lbgenerate.addActionListener(this);
+        b_lbupdate.addActionListener(this);
+        b_lbok.addActionListener(this);
+        b_lbdelete.addActionListener(this);
+        b_lbclear.addActionListener(this);
+        rb_male.addItemListener(this);
+        rb_female.addItemListener(this);
+        
+        f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f1.setSize(700,700);
+        f1.setVisible(true);
+    }
+    public static void main(String args[])
+    {
+        new Libraryinfo();
+    }
+     public void itemStateChanged(ItemEvent ie){
+
+        ItemSelectable itemselected=ie.getItemSelectable();
+
+        if(itemselected==rb_male){
+                str_lbgender="Male";
+        }
+        else if(itemselected==rb_female){
+                str_lbgender="Female";
+        }
+    }
+     int ui=1;
+     String idd="";
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        
+        if(ob==b_lbgenerate)
+        {
+			
+	   try{
+		   Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+		Statement st=con.createStatement();
+		String query="Select UniqueID from Library";
+		ResultSet rs=st.executeQuery(query);
+		while(rs.next())
+		{
+		    idd=rs.getString("UniqueID");
+		    ui=Integer.parseInt(idd);
+		    if(idd==null)
+		    {
+			ui=1;
+		    }
+		    else
+		    {
+			ui=ui+1;
+		    }
+	        }
+				
+		con.close();
+	    }
+	   catch(Exception ec)
+	   {
+		System.out.print(ec);
+	    }
+	    txt_lbid.setText(ui+"");
+	}
+        if(ob==b_lbadd)
+        {
+           try
+           {
+           String str_lbname,str_lbqua,str_lbphno,str_lbdob,str_lbage,str_lbdes,str_lbid,str_lbexp;
+           str_lbname=txt_lbname.getText();
+           str_lbqua=txt_lbqua.getText();
+           str_lbphno=txt_lbphno.getText();
+           str_lbdob=txt_lbdob.getText();
+           str_lbage=txt_lbage.getText();
+           str_lbdes=jcb_lbdes.getSelectedItem().toString();
+           str_lbid=txt_lbid.getText();
+           str_lbexp=txt_lbexp.getText();
+            Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+           
+            
+            String query="insert into Library values('"+str_lbname+"','"+str_lbqua+"','"+str_lbdob+"','"+str_lbage+"','"+str_lbgender+"','"+str_lbexp+"','"+str_lbphno+"','"+str_lbdes+"','"+str_lbid+"')";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(f1,"Added Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println(" "+ex);
+            }
+           
+           
+        }
+        if(ob==b_lbupdate)
+        {
+            str_lbid=JOptionPane.showInputDialog("enter the Library Id");
+                
+           try{
+        	   Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                Statement  st=con.createStatement();
+                  
+                 String query="select * from Library where UniqueID='"+str_lbid+"'";
+
+                 ResultSet rs = st.executeQuery(query);
+                  while(rs.next())
+                  {
+                     
+                 txt_lbname.setText(rs.getString("Name"));
+                 txt_lbqua.setText(rs.getString("Qualification"));
+                            
+                 txt_lbphno.setText(rs.getString("Phone"));
+                txt_lbdob.setText(rs.getString("DOB"));
+            
+                txt_lbage.setText(rs.getString("Age"));
+                txt_lbid.setText(rs.getString("UniqueID"));
+                txt_lbexp.setText(rs.getString("Experience"));
+            
+            
+                jcb_lbdes.setSelectedItem(rs.getString("Designation"));
+            
+                  }        
+                      
+            
+                con.close();
+                rb_male.setEnabled(false);
+                 rb_female.setEnabled(false);
+            
+                txt_lbage.setEditable(false);
+            
+                txt_lbdob.setEditable(false);
+                txt_lbexp.setEnabled(false);
+            
+           
+                b_lbadd.setEnabled(false);
+                b_lbgenerate.setEnabled(false);
+                b_lbdelete.setEnabled(false);
+                b_lbupdate.setEnabled(false);
+              
+                        
+                   
+           
+            }
+            catch(Exception exp){
+             if(exp instanceof SQLException)
+                {
+                JOptionPane.showMessageDialog(f1, "ID Doesn't Exist");;
+               }
+				
+            }
+        }
+        if(ob==b_lbok)
+        {
+            try
+           {
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+                Statement  st = con.createStatement();
+           
+            
+                String query="update Library set Name='"+txt_lbname.getText()+"',Qualification='"+txt_lbqua.getText()+"',Phone='"+txt_lbphno.getText()+"',Designation='"+jcb_lbdes.getSelectedItem().toString()+"'  where UniqueID='"+str_lbid+"'";
+                st.executeUpdate(query);
+                con.close();
+                JOptionPane.showMessageDialog(f1,"Updated Successfully");
+              
+               rb_male.setEnabled(true);
+              rb_female.setEnabled(true);
+                txt_lbage.setEditable(true);
+            
+                txt_lbdob.setEditable(true);
+                txt_lbexp.setEnabled(true);
+            
+           
+                b_lbadd.setEnabled(true);
+                b_lbgenerate.setEnabled(true);
+                b_lbdelete.setEnabled(true);
+                b_lbupdate.setEnabled(true);
+            
+            
+                
+           }
+           catch(Exception ex)
+            {
+                       System.out.println("--->"+ex);
+            }
+        }
+        if(ob==b_lbdelete)
+        {
+            String str_lbdeleteid;
+            str_lbdeleteid=JOptionPane.showInputDialog("enter the Delete ID");
+            try
+           {
+          
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+           
+            
+            String query="delete from Library where UniqueID='"+str_lbdeleteid+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(f1,"Deleted Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-->"+ex);
+            }
+           
+            
+        }
+        if(ob==b_lbclear)
+        {
+            txt_lbname.setText("");
+            txt_lbqua.setText("");
+            txt_lbphno.setText("");
+            txt_lbdob.setText("");
+            txt_lbexp.setText("");
+            txt_lbage.setText("");
+            txt_lbid.setText("");
+           bg.clearSelection();
+           jcb_lbdes.setSelectedItem(null);
+          
+            
+           
+            
+        }
+       
+        
+    }
+         
+    
+}
+

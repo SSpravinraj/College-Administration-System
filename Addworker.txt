@@ -1,0 +1,380 @@
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+import javax.swing.*;
+
+
+public class Addworker extends JFrame implements ActionListener,ItemListener{
+    
+    JFrame workers;
+    JLabel name,age,dob,gender,mobile,address,unique_id,workas;
+    JTextField text_name,text_age,text_dob,text_gender,text_mobile,text_address,text_unique_id;
+    JRadioButton male,female;
+    JButton add,delete,update,generate,clear,ok;
+    ButtonGroup radio_gender;
+    JComboBox combo_bg;
+    String str_workergender,str_updid;
+    
+    Addworker()
+    {
+        workers= new JFrame("Worker Info");
+        workers.setLayout(null);
+        
+        //workers.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Workers Info");
+        lbl_heading.setBounds(200,30,200,40);
+        workers.add(lbl_heading);
+        lbl_heading.setFont(f);
+    
+    //Name Creation
+        name=new JLabel("Name : ");
+        name.setBounds(50,75,80,30);
+        
+        text_name=new JTextField();
+        text_name.setBounds(180,75,150,30);
+        
+    //Age Creation    
+        age=new JLabel("Age : ");
+        age.setBounds(50,125,80,30);
+        
+        text_age=new JTextField();
+        text_age.setBounds(180,125,150,30);
+        
+    //DOB Creation
+        dob=new JLabel("DOB : ");
+        dob.setBounds(50,175,80,30);
+        
+        text_dob=new JTextField();
+        text_dob.setBounds(180,175,150,30);
+        
+    //Gender Creation
+      
+        gender=new JLabel("Gender : ");
+        gender.setBounds(50,225,80,30);
+      
+        male=new JRadioButton("Male");
+        male.setBounds(180,225,80,30);
+     
+        female=new JRadioButton("Female");
+        female.setBounds(280,225,100,30);
+     
+        radio_gender=new ButtonGroup();
+        radio_gender.add(male);
+        radio_gender.add(female);    
+    
+    //Phone Number Creation
+        mobile=new JLabel("Phone Number : ");
+        mobile.setBounds(50,275,100,30);
+        
+        text_mobile=new JTextField();
+        text_mobile.setBounds(180,275,150,30);     
+    
+    //Address Creation
+        address=new JLabel("Address : ");
+        address.setBounds(50,325,100,30);
+        
+        text_address=new JTextField();
+        text_address.setBounds(180,325,150,30);
+        
+    //Blood Group Creation
+        workas=new JLabel("Work As : ");
+        workas.setBounds(50,375,120,30);
+        
+        String bg_arr[]={"Sweeper","Cleaner","Bus Cleaner","Parking Guide"};
+        combo_bg = new JComboBox(bg_arr);
+        combo_bg.setBounds(180,375,100,30);
+       
+    //Unique ID Creation
+        unique_id=new JLabel("Unique ID :");
+        unique_id.setBounds(50,425,60,30);
+        
+        text_unique_id=new JTextField();
+        text_unique_id.setBounds(180,425,100,30);
+       
+        generate = new JButton("Generate");
+        generate.setBounds(300, 425, 100, 25);
+        
+         
+        add = new JButton("Add");
+        add.setBounds(75,475, 80, 25);
+        
+        update = new JButton("Update");
+        update.setBounds(175,475, 80, 25);
+        
+        delete = new JButton("Delete");
+        delete.setBounds(75, 525, 80, 25);
+        
+        clear = new JButton("Clear");
+        clear.setBounds(175, 525, 80, 25); 
+        
+        ok=new JButton("OK");
+        ok.setBounds(275,475,80,25);
+        
+    workers.add(name);
+    workers.add(text_name);
+    
+    workers.add(age);
+    workers.add(text_age);
+    
+    workers.add(dob);
+    workers.add(text_dob);
+    
+    workers.add(gender);
+    workers.add(male);
+    workers.add(female);
+    
+    workers.add(mobile);
+    workers.add(text_mobile);
+    
+    workers.add(address);
+    workers.add(text_address);
+    workers.add(workas);
+    workers.add(combo_bg);
+    
+    workers.add(unique_id);
+    workers.add(text_unique_id);
+    
+    workers.add(add);
+    workers.add(update);
+    workers.add(unique_id);
+    workers.add(delete);
+    workers.add(update);
+    workers.add(clear);
+    workers.add(generate);
+    workers.add(ok);
+    
+    text_unique_id.setEditable(false);
+    
+    add.addActionListener(this);
+    generate.addActionListener(this);
+    update.addActionListener(this);
+    clear.addActionListener(this);
+    delete.addActionListener(this);
+    ok.addActionListener(this);
+    male.addItemListener(this);
+    female.addItemListener(this);
+    workers.setSize(700,700);
+     workers.setVisible(true);
+   
+    }
+public static void main (String[] args)
+{
+    new Addworker();
+}
+ public void itemStateChanged(ItemEvent ie){
+
+        ItemSelectable itemselected=ie.getItemSelectable();
+
+        if(itemselected==male){
+                str_workergender="Male";
+        }
+        else if(itemselected==female){
+                str_workergender="Female";
+        }
+    }
+int ui=1;
+String idd="";
+ public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        
+        if(ob==generate)
+		{
+			
+			try{
+				 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+				Statement st=con.createStatement();
+				String query="Select UniqueID from worker";
+				ResultSet rs=st.executeQuery(query);
+				while(rs.next())
+				{
+					idd=rs.getString("UniqueID");
+					ui=Integer.parseInt(idd);
+					if(idd==null)
+					{
+						ui=1;
+					}
+					else
+					{
+						ui=ui+1;
+					}
+				}
+				
+				con.close();
+			}
+			catch(Exception ec)
+			{
+				System.out.print(ec);
+			}
+			text_unique_id.setText(ui+"");
+		}
+         
+        if(ob==add)
+        {
+           try
+           {
+           String str_name,str_age,str_dob,str_mobile,str_address,str_unique_id,str_workas;
+           str_name=text_name.getText();
+           str_age=text_age.getText();
+           str_address=text_address.getText();
+           str_mobile=text_mobile.getText();
+           str_dob=text_dob.getText();
+           str_workas=combo_bg.getSelectedItem().toString();
+           str_unique_id=text_unique_id.getText();
+          Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            Statement  st = con.createStatement();
+           
+            
+            String query="insert into worker values('"+str_name+"','"+str_age+"','"+str_dob+"','"+str_workergender+"','"+str_mobile+"','"+str_address+"','"+str_workas+"','"+str_unique_id+"')";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(combo_bg,"Added Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println(" "+ex);
+            }
+           
+           
+           
+           
+        }
+        if(ob==update)
+        {
+            str_updid=JOptionPane.showInputDialog("Enter Worker's Id");
+                
+        try{
+        	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+           Statement  st=con.createStatement();
+                  
+            String query="select * from worker where UniqueID='"+str_updid+"'";
+
+           ResultSet rs = st.executeQuery(query);
+          
+              while(rs.next())
+              {
+                     
+            text_name.setText(rs.getString("Name"));
+            text_address.setText(rs.getString("Address"));
+                            
+            text_mobile.setText(rs.getString("Phonenumber"));
+            text_dob.setText(rs.getString("DOB"));
+            
+            text_age.setText(rs.getString("Age"));
+            text_unique_id.setText(rs.getString("UniqueID"));
+            
+            
+            combo_bg.setSelectedItem(rs.getString("Workas"));
+              }
+           
+            con.close();
+            male.setEnabled(false);
+            female.setEnabled(false);
+            
+            age.setEnabled(false);
+            dob.setEnabled(false);
+            
+           
+            add.setEnabled(false);
+            generate.setEnabled(false);
+            delete.setEnabled(false);
+            update.setEnabled(false);
+              
+                        
+        }
+        catch(Exception exp){
+          if(exp instanceof SQLException)
+	{
+	JOptionPane.showMessageDialog(generate, "ID Doesn't Exist");;
+	}
+      }
+   }
+        if(ob==ok)
+        {
+            try
+           {
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+               Statement  st = con.createStatement();
+               String query="update worker set Name='"+text_name.getText()+"',Address='"+text_address.getText()+"',Phonenumber='"+text_mobile.getText()+"',workas='"+combo_bg.getSelectedItem().toString()+"'  where UniqueID='"+str_updid+"'";
+               st.executeUpdate(query);
+               con.close();
+               JOptionPane.showMessageDialog(combo_bg,"Updated Successfully");
+               male.setEnabled(true);
+            female.setEnabled(true);
+            
+            age.setEnabled(true);
+            dob.setEnabled(true);
+            
+           
+            add.setEnabled(true);
+            generate.setEnabled(true);
+            delete.setEnabled(true);
+            update.setEnabled(true);
+            text_name.setText("");
+            text_address.setText("");
+            text_mobile.setText("");
+            text_dob.setText("");
+            
+            text_age.setText("");
+            text_unique_id.setText("");
+            combo_bg.setSelectedItem(null);
+            radio_gender.clearSelection();
+              
+              
+                
+           }
+           catch(Exception ex)
+            {
+                       System.out.println("--->"+ex);
+            }
+        }
+        if(ob==delete)
+        {
+            String str_delete_id;
+            str_delete_id=JOptionPane.showInputDialog("enter the Delete ID");
+            try
+           {
+          
+            	 Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+            
+            Statement  st = con.createStatement();
+           
+            
+            String query="delete from worker where UniqueID='"+str_delete_id+"'";
+            st.executeUpdate(query);
+            con.close();
+            JOptionPane.showMessageDialog(combo_bg,"Deleted Successfully");
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-->"+ex);
+            }
+           
+            
+        }
+        if(ob==clear)
+        {
+            text_name.setText("");
+            text_address.setText("");
+            text_mobile.setText("");
+            text_dob.setText("");
+            
+            text_age.setText("");
+            text_unique_id.setText("");
+            combo_bg.setSelectedItem(null);
+            radio_gender.clearSelection();
+            
+        }
+    }
+
+}
+
+

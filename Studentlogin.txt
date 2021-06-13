@@ -1,0 +1,282 @@
+import java.util.regex.*;
+import com.email.durgesh.Email;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.*;
+
+
+
+public class Studentlogin extends JFrame implements ActionListener{
+    JFrame f1;
+    JLabel lbl_stuname,lbl_stuid,lbl_studept,lbl_stuave,lbl_stutotal,lbl_stugrade,lbl_stufees;
+    JTextField txt_stuname,txt_stuid,txt_studept,txt_stutotal,txt_stuave,txt_stugrade,txt_stufees;
+    JButton b_view,b_sendmail;
+    
+ 
+  
+  
+   
+    
+    
+    Studentlogin(String ID)
+    {
+        JFrame f1=new JFrame("Student Info");
+        
+        f1.setLayout(null);
+         Font f=new Font("Arial",Font.BOLD,20);
+        JLabel lbl_heading=new JLabel("Student Info");
+        lbl_heading.setBounds(200,50,200,40);
+       // f1.add(lbl_heading);
+        lbl_heading.setFont(f);
+        lbl_stuname=new JLabel("Name");
+        lbl_stuid=new JLabel("ID");
+        lbl_studept=new JLabel("Department");
+        lbl_stutotal=new JLabel("Total");
+        lbl_stuave=new JLabel("Average");
+        lbl_stugrade=new JLabel("Grade");
+        lbl_stufees=new JLabel("Fees Status");
+        Font font = new Font("Arial", Font.PLAIN, 14);
+        lbl_stuname.setFont(font);
+        lbl_stuid.setFont(font);
+        lbl_studept.setFont(font);
+        lbl_stutotal.setFont(font);
+        lbl_stuave.setFont(font);
+        lbl_stugrade.setFont(font);
+        lbl_stufees.setFont(font);
+        
+        txt_stuname=new JTextField();
+        txt_stuid=new JTextField();
+        txt_studept=new JTextField();
+        txt_stutotal=new JTextField();
+        txt_stuave=new JTextField();
+        txt_stugrade=new JTextField();
+        txt_stufees=new JTextField();
+        b_view=new JButton("View Mark");
+        b_sendmail=new JButton("Send Mail");
+      
+        ImageIcon image1=new ImageIcon("C:/Users/USER/Desktop/pravin4.jpg");
+        JLabel label1=new JLabel(image1);
+        f1.add(label1);
+        label1.setBounds(380,130,130,120);
+         ImageIcon image2=new ImageIcon("D:/CAS/1.jpg");
+        JLabel label2=new JLabel(image2);
+        f1.add(label2);
+        label2.setBounds(0,0,600,100);
+       
+        
+        
+        
+       try{
+           // Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+           Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+           Statement  st=con.createStatement();
+                  
+            String query="select * from Students where UniqueID='"+ID+"'";
+
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+                  
+                     
+           txt_stuname.setText(rs.getString("Name"));
+           txt_stuid.setText(rs.getString("UniqueID"));
+           txt_studept.setText(rs.getString("Department"));
+           txt_stufees.setText(rs.getString("fees"));
+           txt_stufees.setEditable(false);
+           
+          int a,b,c,d,e;
+          a=Integer.parseInt(rs.getString("subject1"));
+          b=Integer.parseInt(rs.getString("subject2"));
+          c=Integer.parseInt(rs.getString("subject3"));
+          d=Integer.parseInt(rs.getString("subject4"));
+          e=Integer.parseInt(rs.getString("subject5"));
+          
+          int total=a+b+c+d+e;
+          int average=total/5;
+          if(average>=90)
+          {
+              txt_stugrade.setText("A");
+          }
+          else if(average>=80 && average<90 )
+          {
+              txt_stugrade.setText("B");
+          }
+          else if( average>=70 && average<80)
+          {
+              txt_stugrade.setText("C");
+          }
+          else if( average>=60 && average<70)
+          {
+              txt_stugrade.setText("D");
+          }
+           else if( average>=50 && average<60)
+          {
+              txt_stugrade.setText("E");
+          }
+           else if(average<50)
+          {
+              txt_stugrade.setText("Fail");
+          }
+          String str_total=Integer.toString(total);
+          String str_ave=Integer.toString(average);
+          txt_stutotal.setText(str_total);
+          txt_stuave.setText(str_ave);
+            }
+          con.close();
+          }
+        catch(Exception exp){
+          if(exp instanceof SQLException)
+	  {
+	     JOptionPane.showMessageDialog(f1, "ID Doesn't Exist");;
+	  }
+	}
+       
+       
+        
+                
+        f1.add(lbl_stuname);
+        f1.add(lbl_stuid);
+        f1.add(lbl_studept);
+        f1.add(lbl_stutotal);
+        f1.add(lbl_stuave);
+        f1.add(lbl_stufees);
+        f1.add(lbl_stugrade);
+        f1.add(txt_stuname);
+        f1.add(txt_stuid);
+        f1.add(txt_studept);
+        f1.add(txt_stutotal);
+        f1.add(txt_stuave);
+        f1.add(txt_stugrade);
+        f1.add(txt_stufees);
+        f1.add(b_view);
+        f1.add(b_sendmail);
+        
+        
+        lbl_stuname.setBounds(100,120,100,25);
+        lbl_stuid.setBounds(100,170,100,25);
+        lbl_studept.setBounds(100,220,100,25);
+        lbl_stufees.setBounds(100,270,100,25);
+        lbl_stutotal.setBounds(100,320,100,25);
+        lbl_stuave.setBounds(100,370,100,25);
+        lbl_stugrade.setBounds(100,420,100,25);
+        
+        txt_stuname.setBounds(250,120,100,25);
+        txt_stuid.setBounds(250,170,100,25);
+        txt_studept.setBounds(250,220,100,25);
+        txt_stufees.setBounds(250,270,100,25);
+        txt_stutotal.setBounds(250,320,100,25);
+        txt_stuave.setBounds(250,370,100,25);
+        txt_stugrade.setBounds(250,420,100,25);
+        b_view.setBounds(100,470,100,25);
+        b_sendmail.setBounds(250,470,100,25);
+        
+        
+        b_view.addActionListener(this);
+        b_sendmail.addActionListener(this);
+        
+        f1.setBackground(Color.WHITE);
+        f1.setDefaultCloseOperation(3);
+        f1.setSize(600,550);
+        f1.setVisible(true);
+        
+
+          
+        
+        
+        
+        
+    }
+    public static void main(String args[])
+    {
+        
+        
+        
+    }
+  
+    public void actionPerformed(ActionEvent e)
+    {
+        Object ob=e.getSource();
+        if(ob==b_view)
+        {
+            JTable table=new JTable();
+            JScrollPane sc=new JScrollPane();
+            try{
+              //Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+              Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                Statement  st=con.createStatement();
+                String ID=txt_stuid.getText();
+                String query="select * from students where UniqueId='"+ID+"'";
+
+                ResultSet rs = st.executeQuery(query);
+            while(rs.next())
+            {
+  		Object c[][]={
+                    {"subject1",rs.getString("subject1")},
+                    {"subject2",rs.getString("subject2")},
+                    {"subject3",rs.getString("subject3")},
+                    {"subject4",rs.getString("subject4")},
+                    {"subject5",rs.getString("subject5")},
+                	
+                    };
+
+  		Object r[]={"Subject","Mark"};
+
+  		table=new JTable(c, r);
+  		sc=new JScrollPane(table);
+  		add(sc,BorderLayout.CENTER);
+            }
+            }
+            catch(Exception ex)
+            {
+                System.out.println("-->"+ex);
+            }
+               setSize(400,400);
+               setVisible(true);
+            
+        }
+       if(ob==b_sendmail)
+       {
+           try{
+               String mailid;
+               mailid=JOptionPane.showInputDialog("enter the Mail Id");
+              JTextArea t=new JTextArea();
+             //  Connection con=DriverManager.getConnection("jdbc:sqlite:D:/admin/admin.db");
+             Class.forName("com.mysql.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/cas","root","");
+                Statement  st=con.createStatement();
+                String ID=txt_stuid.getText();
+                String query="select * from students where UniqueId='"+ID+"'";
+                 ResultSet rs = st.executeQuery(query);
+                t.append("Subject1-"+rs.getString("subject1")+"\n");
+                t.append("Subject2-"+rs.getString("subject2")+"\n");
+                t.append("Subject3-"+rs.getString("subject3")+"\n");
+                t.append("Subject4-"+rs.getString("subject4")+"\n");
+                t.append("Subject5-"+rs.getString("subject5")+"\n");
+                t.append("Total-"+txt_stutotal.getText()+"\n");
+                t.append("Average-"+txt_stuave.getText()+"\n");
+                t.append("Grade-"+txt_stugrade.getText()+"\n");
+               //boolean p=Pattern.matches("[a-z0-9]+(@gmail\\.com@skcet\\.ac\\.in)",mailid);
+               
+                 Email email=new Email("pravinleap2000@gmail.com","rajpravin2000");
+                email.setFrom("pravinleap2000@gmail.com","Mark");
+                email.setSubject("Marks");
+                email.setContent(t.getText(),"text/html");
+                email.addRecipient(mailid);
+                email.send();
+              
+            
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println("-->"+ex);
+        }
+       }
+        
+    }
+
+ 
+}
